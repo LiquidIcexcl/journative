@@ -1,9 +1,10 @@
-import { Account, Avatars, Client, Databases, ID, Query } from 'react-native-appwrite';
+import { Account, Avatars, Client, Databases, ID, Query, Storage } from 'react-native-appwrite';
 import { User } from './modal';
 // import { ImageResult } from 'expo-image-manipulator'
 
 const databaseId = "6816bee7001e6018e128";
 const projectId = "6816be9b001517c67a5c";
+const bucketId = "6816c7b2001e6018e128";
 const collectionIdUser = "6816bf9d000fc4bfb34b";
 const collectionIdFollow="6816c7c2000b6360b84d"
 const collectionIdPost = "6816c7ce0026b1143612"
@@ -14,31 +15,31 @@ const client = new Client().setEndpoint('https://cloud.appwrite.io/v1').setProje
 const account = new Account(client)
 const database = new Databases(client)
 const avatars = new Avatars(client)
-// const storage = new Storage(client)
+const storage = new Storage(client)
 
-// export const uploadFile = async (image_key: string, file: ImageResult) => {
-//     try {
-//         const res = await storage.createFile(bucketId, image_key, {
-//             name: image_key,
-//             type: 'image/jpeg',
-//             size: file.height * file.width,
-//             uri: file.uri
-//         })
+export const uploadFile = async (image_key: string, file: ImageResult) => {
+    try {
+        const res = await storage.createFile(bucketId, image_key, {
+            name: image_key,
+            type: 'image/jpeg',
+            size: file.height * file.width,
+            uri: file.uri
+        })
 
-//         const fileId = res.$id
+        const fileId = res.$id
         
-//         const fileUrl = storage.getFilePreview(bucketId, fileId, 640, 640, ImageGravity.Top, 100)
+        const fileUrl = storage.getFilePreview(bucketId, fileId, 640, 640, ImageGravity.Top, 100)
 
-//         return {
-//             fileId,
-//             fileUrl
-//         }
+        return {
+            fileId,
+            fileUrl
+        }
         
-//     } catch (error) {
-//         console.log(error)
-//         throw error
-//     }
-// }
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
 
 // 登录部分API
 

@@ -5,6 +5,9 @@ import { User } from './modal';
 const databaseId = "6816bee7001e6018e128";
 const projectId = "6816be9b001517c67a5c";
 const collectionIdUser = "6816bf9d000fc4bfb34b";
+const collectionIdFollow="6816c7c2000b6360b84d"
+const collectionIdPost = "6816c7ce0026b1143612"
+const collectionIdComment = "6816c7c80037305d9a4c"
 
 const client = new Client().setEndpoint('https://cloud.appwrite.io/v1').setProject(projectId);  
 
@@ -113,116 +116,116 @@ export const getCurrentUser = async () => {
     return null
 }
 
-// // 1. post
-// export const createPost = async (title: string, content: string, image_url: string, creator_id: string, creator_name: string, creator_avatar_url: string) => {
-//     try {
-//         const post = await database.createDocument(databaseId, collectionIdPost, ID.unique(), {
-//             title,
-//             content,
-//             image_url,
-//             creator_id,
-//             creator_name,
-//             creator_avatar_url
-//         })
-//         return post.$id
-//     } catch (error) {
-//         console.log(error)
-//         throw error
-//     }
-// }
+// 1. post
+export const createPost = async (title: string, content: string, image_url: string, creator_id: string, creator_name: string, creator_avatar_url: string) => {
+    try {
+        const post = await database.createDocument(databaseId, collectionIdPost, ID.unique(), {
+            title,
+            content,
+            image_url,
+            creator_id,
+            creator_name,
+            creator_avatar_url
+        })
+        return post.$id
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
 
-// export const getPostById = async (post_id: string) => {
-//     try {
-//         const res = await database.getDocument(databaseId, collectionIdPost, post_id)
-//         return res
-//     } catch (error) {
-//         console.log(error)
-//         throw error
-//     }
-// }
+export const getPostById = async (post_id: string) => {
+    try {
+        const res = await database.getDocument(databaseId, collectionIdPost, post_id)
+        return res
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
 
-// export const getPosts = async (pageNumber: number, pageSize: number, userIds?: string[]) => {
-//     try {
-//         let queries = [Query.limit(pageSize), Query.offset(pageNumber * pageSize), Query.orderDesc('$createdAt')]
-//         if (userIds) {
-//             queries.push(Query.equal('creator_id', userIds))
-//         }
-//         const posts = await database.listDocuments(databaseId, collectionIdPost, queries)
-//         return posts.documents
-//     } catch (error) {
-//         console.log(error)
-//         return []
-//     }
-// }
+export const getPosts = async (pageNumber: number, pageSize: number, userIds?: string[]) => {
+    try {
+        let queries = [Query.limit(pageSize), Query.offset(pageNumber * pageSize), Query.orderDesc('$createdAt')]
+        if (userIds) {
+            queries.push(Query.equal('creator_id', userIds))
+        }
+        const posts = await database.listDocuments(databaseId, collectionIdPost, queries)
+        return posts.documents
+    } catch (error) {
+        console.log(error)
+        return []
+    }
+}
 
-// // 2. comment
-// export const createComment = async (post_id: string, from_user_id: string, content: string, from_user_name: string, from_user_avatar_url: string) => {
-//     try {
-//         const res = await database.createDocument(databaseId, collectionIdComment, ID.unique(), {
-//             post_id,
-//             from_user_id,
-//             from_user_name,
-//             from_user_avatar_url,
-//             content
-//         })
+// 2. comment
+export const createComment = async (post_id: string, from_user_id: string, content: string, from_user_name: string, from_user_avatar_url: string) => {
+    try {
+        const res = await database.createDocument(databaseId, collectionIdComment, ID.unique(), {
+            post_id,
+            from_user_id,
+            from_user_name,
+            from_user_avatar_url,
+            content
+        })
 
-//         return res
-//     } catch (error) {
-//         console.log('createComment error', error)
-//         throw error
-//     }
-// }
+        return res
+    } catch (error) {
+        console.log('createComment error', error)
+        throw error
+    }
+}
 
-// export const getCommentsByPostId = async (post_id: string) => {
-//     try {
-//         const res = await database.listDocuments(databaseId, collectionIdComment, [Query.equal('post_id', post_id)])
-//         return res.documents
-//     } catch (error) {
-//         console.log('getCommentsByPostId', error)
-//         throw error
-//     }
-// }
+export const getCommentsByPostId = async (post_id: string) => {
+    try {
+        const res = await database.listDocuments(databaseId, collectionIdComment, [Query.equal('post_id', post_id)])
+        return res.documents
+    } catch (error) {
+        console.log('getCommentsByPostId', error)
+        throw error
+    }
+}
 
-// // 3. follow
-// export const followUser = async (from_user_id: string, to_user_id: string) => {
-//     try {
-//         const res = await database.createDocument(databaseId, collectionIdFollow, ID.unique(), {
-//             from_user_id,
-//             to_user_id
-//         })
-//         return res
-//     } catch (error) {
-//         console.log(error)
-//         throw error
-//     }
-// }
+// 3. follow
+export const followUser = async (from_user_id: string, to_user_id: string) => {
+    try {
+        const res = await database.createDocument(databaseId, collectionIdFollow, ID.unique(), {
+            from_user_id,
+            to_user_id
+        })
+        return res
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
 
-// export const unFollowUser = async (from_user_id: string, to_user_id: string) => {
-//     try {
-//         const res = await database.listDocuments(databaseId, collectionIdFollow,
-//             [Query.equal('from_user_id', from_user_id), Query.equal('to_user_id', to_user_id)])
-//         if (res && res.documents) {
-//             const deleteRes = await database.deleteDocument(databaseId, collectionIdFollow, res.documents[0].$id)
-//             return deleteRes
-//         }
-//         return null
+export const unFollowUser = async (from_user_id: string, to_user_id: string) => {
+    try {
+        const res = await database.listDocuments(databaseId, collectionIdFollow,
+            [Query.equal('from_user_id', from_user_id), Query.equal('to_user_id', to_user_id)])
+        if (res && res.documents) {
+            const deleteRes = await database.deleteDocument(databaseId, collectionIdFollow, res.documents[0].$id)
+            return deleteRes
+        }
+        return null
 
-//     } catch (error) {
-//         console.log(error)
-//         throw error
-//     }
-// }
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
 
-// export const getFollowingUsers = async (user_id: string) => {
-//     try {
-//         const res = await database.listDocuments(databaseId, collectionIdFollow,
-//             [Query.equal('from_user_id', user_id)]
-//         )
-//         return res.documents.map((item) => item.to_user_id)
-//     } catch (error) {
-//         console.log(error)
-//         throw error
-//     }
-// }
+export const getFollowingUsers = async (user_id: string) => {
+    try {
+        const res = await database.listDocuments(databaseId, collectionIdFollow,
+            [Query.equal('from_user_id', user_id)]
+        )
+        return res.documents.map((item) => item.to_user_id)
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
+}
 
 

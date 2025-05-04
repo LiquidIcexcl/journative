@@ -34,12 +34,39 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="index_all"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
+          title: 'All',
+          tabBarItemStyle: {
+            display: 'none',
+          },
+          // tabBarIcon: ({ color }) => <IconSymbol size={28} name="heart.fill" color={color} />,
+        }} 
       />
+      <Tabs.Screen
+        name="index_follow"
+        options={{
+          title: 'Following',
+          tabBarItemStyle: {
+            display: 'none',
+          },
+          // tabBarIcon: ({ color }) => <IconSymbol size={28} name="heart.fill" color={color} />,
+        }} 
+      />
+      <Tabs.Screen
+
+        name="add"
+        options={{
+          title: 'Add',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="plus.app.fill" color={color} />,
+        }} />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.fill" color={color} />,
+        }} />
+
     </Tabs>
   );
 }

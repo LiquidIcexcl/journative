@@ -101,7 +101,7 @@ export default function Add() {
       </Pressable>
 
       <TextInput
-        placeholder='标题'
+        placeholder='标题1'
         value={title}
         onChangeText={setTitle}
         className='w-[300px] h-[40px] rounded-lg border-myGreen border-2 mt-10 p-2'

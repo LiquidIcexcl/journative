@@ -1,27 +1,43 @@
-import PopMenu from '@/components/PopMenu';
-import React from 'react';
-import { View } from 'react-native';
+import React, { useState } from 'react';
+import { Button, StyleSheet, View } from 'react-native';
+import { launchImageLibrary } from 'react-native-image-picker';
+import Bookshelf from './bookshelf';
 
-interface MenuOption {
-    label: string;      // 按钮显示文本
-    onPress: () => void;// 点击回调
-    icon?: React.ReactNode; // 可选图标[7](@ref)
-}
+const Test = () => {
+  const [mediaItems, setMediaItems] = useState<string[]>([]);
 
-const test_MenuOptions = () => {
+  const selectMedia = async () => {
+    const result = await launchImageLibrary({
+      mediaType: 'mixed',
+      selectionLimit: 14,
+      includeBase64: false,
+    });
 
-    const options: MenuOption[] = [
-        { label: 'Edit1', onPress: () => console.log('Edit1') },
-        { label: 'Share', onPress: () => console.log('Share') },
-        { label: 'Delete', onPress: () => console.log('Delete') },
-        { label: 'Report', onPress: () => console.log('Report') },
-    ];
+    if (result.assets) {
+      setMediaItems(result.assets.map(asset => asset.uri || ''));
+    }
+  };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <PopMenu options={options} triggerStyle={{ width: 50, height: 50, backgroundColor: 'red' }} menuWidth={100} />
+    <View style={styles.container}>
+      <Bookshelf items={mediaItems} />
+      <View style={styles.buttonContainer}>
+        <Button title="选择媒体" onPress={selectMedia} />
+      </View>
     </View>
-  )
-}
+  );
+};
 
-export default test_MenuOptions
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 20,
+    alignSelf: 'center',
+  },
+});
+
+export default Test;

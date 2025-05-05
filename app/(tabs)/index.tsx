@@ -17,7 +17,7 @@ export default function HomeScreen() {
         />
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
+        <ThemedText type="title">Welcome!!!</ThemedText>
         <HelloWave />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
@@ -28,7 +28,7 @@ export default function HomeScreen() {
           <ThemedText type="defaultSemiBold">
             {Platform.select({
               ios: 'cmd + d',
-              android: 'cmd + m',
+              android: Platform.OS,
               web: 'F12',
             })}
           </ThemedText>{' '}

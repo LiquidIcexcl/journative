@@ -4,7 +4,7 @@ import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Image, Pressable, SafeAreaView, Text, TextInput, View } from 'react-native';
+import { Alert, Image, Platform, Pressable, SafeAreaView, StatusBar, Text, TextInput, View } from 'react-native';
 import { ID } from 'react-native-appwrite';
 
 export default function Add() {
@@ -88,7 +88,7 @@ export default function Add() {
   };
 
   return (
-    <SafeAreaView className='flex-1 bg-myBackGround flex-col items-center'>
+    <SafeAreaView className='flex-1 bg-myBackGround flex-col items-center' style={{marginTop: Platform.OS === 'android' ? StatusBar.currentHeight || 0 : 0}}> 
       <Pressable 
         onPress={pickImage}
         className='border-2 mt-10 h-[260px] w-[300px] rounded-lg border-myGreen'

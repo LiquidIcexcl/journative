@@ -2,7 +2,7 @@ import { useGlobalContext } from '@/context/GlobalContext'
 import { logout } from '@/lib/appwrite'
 import { Link } from 'expo-router'
 import React from 'react'
-import { Image, Pressable, SafeAreaView, Text, View } from 'react-native'
+import { Image, Platform, Pressable, SafeAreaView, StatusBar, Text, View } from 'react-native'
 
 const profile = () => {
   const {user, refreshUser} = useGlobalContext()
@@ -13,7 +13,7 @@ const profile = () => {
   }
 
   return (
-    <SafeAreaView className='flex-1 bg-myBackGround'>
+    <SafeAreaView className='flex-1 bg-myBackGround' style={{marginTop: Platform.OS === 'android' ? StatusBar.currentHeight || 0 : 0}}>
       <View className='flex-1 flex-col items-center'>
 
         <View className='flex-row gap-2 items-center justify-center'>

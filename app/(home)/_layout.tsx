@@ -4,6 +4,9 @@ import React from 'react'
 const homeLayout = () => {
   return (
     <Slot />
+    // <PostAdd />
+    // <FoundPage />
+    // <aA />
   )
 }
 

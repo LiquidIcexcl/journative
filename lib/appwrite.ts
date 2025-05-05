@@ -1,16 +1,19 @@
-import { Account, Avatars, Client, Databases, ID, Query, Storage } from 'react-native-appwrite';
+import { ImageResult } from 'expo-image-manipulator';
+import { Account, Avatars, Client, Databases, ID, ImageGravity, Query, Storage } from 'react-native-appwrite';
 import { User } from './modal';
-// import { ImageResult } from 'expo-image-manipulator'
 
 const databaseId = "6816bee7001e6018e128";
 const projectId = "6816be9b001517c67a5c";
-const bucketId = "6816c7b2001e6018e128";
+const bucketId = "6816cdce000e3f0bd051";
 const collectionIdUser = "6816bf9d000fc4bfb34b";
 const collectionIdFollow="6816c7c2000b6360b84d"
 const collectionIdPost = "6816c7ce0026b1143612"
 const collectionIdComment = "6816c7c80037305d9a4c"
 
-const client = new Client().setEndpoint('https://cloud.appwrite.io/v1').setProject(projectId);  
+const client = new Client()
+.setEndpoint('https://fra.cloud.appwrite.io/v1')
+.setProject(projectId)
+.setPlatform('org.liquid.journative');
 
 const account = new Account(client)
 const database = new Databases(client)

@@ -12,6 +12,17 @@ module.exports = {
         myBackGround: "#F5F5F5",
         primary: "#1E3A8A", // Example color
         secondary: "#FBBF24", // Example color
+        // 日间模式颜色
+        'day-primary': '#ffffff',
+        'day-secondary': '#f0f0f0',
+        'day-text': '#333333',
+        
+        // 夜间模式颜色
+        myBG: '#07070F',
+        mySpan: '#2D2C34',
+        myPriFont: '#FFFFFF',
+        mySecFont: '#9696A0',
+        myButton: '#5E5BE6',
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],

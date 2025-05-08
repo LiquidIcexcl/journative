@@ -134,8 +134,7 @@ const AlbumPicker = ({ onConfirm, onCancel, containerHeight, maxSelection = 13, 
     setSelectedAssets(newSelected);
     console.log('Selected assets:', newSelected.length, live);
     
-    if (live===true) {
-      console.log('Live mode: ', newSelected);
+    if (live===true) { 
       onConfirm(newSelected, false);
     }
   };

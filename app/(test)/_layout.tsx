@@ -1,10 +1,10 @@
-import { Slot } from 'expo-router'
 import React from 'react'
+import TestScreen from '.'
 
 const testLayout = () => {
   return (
-    <Slot />
-    // <Hello />
+    // <Slot /> 
+    <TestScreen />
   )
 }
 

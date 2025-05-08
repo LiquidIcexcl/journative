@@ -1,29 +1,49 @@
 import React, { useState } from 'react';
-import { Button, StyleSheet, View } from 'react-native';
-import { launchImageLibrary } from 'react-native-image-picker';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import AlbumPicker, { MediaAsset } from './Album';
 import Bookshelf from './bookshelf';
 
-const Test = () => {
-  const [mediaItems, setMediaItems] = useState<string[]>([]);
+const TestScreen = () => {
+  const [mediaAssets, setMediaAssets] = useState<MediaAsset[]>([]);
+  const [showAlbum, setShowAlbum] = useState(false);
+  // const [mediaList, setMediaList] = useState<MediaAsset[]>([]);
 
-  const selectMedia = async () => {
-    const result = await launchImageLibrary({
-      mediaType: 'mixed',
-      selectionLimit: 14,
-      includeBase64: false,
-    });
-
-    if (result.assets) {
-      setMediaItems(result.assets.map(asset => asset.uri || ''));
-    }
+  const handleSelectMedia = (assets: MediaAsset[], isEnd: boolean) => {
+    setMediaAssets(assets);
+    if(isEnd) setShowAlbum(false); 
+    
   };
+
+  // const handleSwap = (fromIndex: number, toIndex: number) => {
+  //   const newList = [...mediaList];
+  //   [newList[fromIndex], newList[toIndex]] = [newList[toIndex], newList[fromIndex]];
+  //   setMediaList(newList);
+  // };
 
   return (
     <View style={styles.container}>
-      <Bookshelf items={mediaItems} />
+      <Bookshelf assets={mediaAssets}
+                //  onSwap={handleSwap} 
+      />
+      
       <View style={styles.buttonContainer}>
-        <Button title="选择媒体" onPress={selectMedia} />
+        <Pressable 
+          onPress={() => setShowAlbum(true)}
+          style={styles.button}
+        >
+            <Text>选择相册</Text>
+        </Pressable>
       </View>
+
+      {showAlbum && (
+        <AlbumPicker
+          onConfirm={handleSelectMedia}
+          onCancel={() => setShowAlbum(false)}
+          maxSelection={13}
+          live={true}
+          currentAssets={mediaAssets}
+        />
+      )}
     </View>
   );
 };
@@ -31,13 +51,19 @@ const Test = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f5f5f5'
   },
   buttonContainer: {
     position: 'absolute',
-    bottom: 20,
-    alignSelf: 'center',
+    bottom: 40,
+    alignSelf: 'center'
   },
+  button: {
+    backgroundColor: '#2196F3',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 8
+  }
 });
 
-export default Test;
+export default TestScreen;

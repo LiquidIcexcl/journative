@@ -1,45 +1,50 @@
-import React, { useState } from 'react';
-import {
-  Dimensions,
-  StyleSheet,
-  View
-} from 'react-native';
-import ImageView from 'react-native-image-viewing';
-import Video from 'react-native-video';
+import React from 'react';
+import { Animated, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import type { MediaAsset } from './Album';
 
-const ImageViewer = ({visible, items, index, onClose}: any) => {
-  const [currentIndex, setCurrentIndex] = useState(index);
+const ImageLooker = ({
+  asset,
+  panHandlers,
+  isDragging,
+  dragPosition
+}: {
+  asset: MediaAsset;
+  panHandlers: any;
+  isDragging: boolean;
+  dragPosition: Animated.ValueXY;
+}) => {
+  const animatedStyle = {
+    transform: dragPosition.getTranslateTransform(),
+    opacity: isDragging ? 0.8 : 1,
+    zIndex: isDragging ? 999 : 1,
+  };
 
   return (
-    <ImageView
-      images={items.map((uri: string) => ({uri}))}
-      imageIndex={currentIndex}
-      visible={visible}
-      onRequestClose={onClose}
-      FooterComponent={({imageIndex}) => (
-        <View style={styles.footer}>
-          {items[imageIndex].type === 'video' && (
-            <Video
-              source={{uri: items[imageIndex].uri}}
-              style={styles.video}
-              controls={true}
-            />
-          )}
-        </View>
-      )}
-    />
+    <Animated.View
+      {...panHandlers}
+      style={[styles.container, animatedStyle]}
+    >
+      <TouchableWithoutFeedback>
+        <Animated.Image
+          source={{ uri: asset.uri }}
+          style={styles.image}
+          resizeMode="cover"
+        />
+      </TouchableWithoutFeedback>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
-  footer: {
-    height: 100,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+  container: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
   },
-  video: {
-    width: Dimensions.get('window').width,
-    height: 100,
+  image: {
+    flex: 1,
+    borderRadius: 4,
   },
 });
 
-export default ImageViewer;
+export default ImageLooker;

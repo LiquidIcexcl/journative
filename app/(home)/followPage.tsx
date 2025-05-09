@@ -5,10 +5,9 @@ import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 
-const Index_follow = () => {
+const FollowPage = () => {
 
     const {freshPostCnt} = useGlobalContext()
-
     const pageSize = 6
     const [posts, setPosts] = useState<any[]>([])
     const [pageNumber, setPageNumber] = useState(0)
@@ -17,6 +16,9 @@ const Index_follow = () => {
     const [refreshing, setRefreshing] = useState(false)
 
     const { user } = useGlobalContext()
+    useEffect(() => {
+      fetchPosts(true)
+    }, [freshPostCnt, user])
 
     const fetchPosts = async (isRefresh = false) => {
       if (loading || !user?.userId) return
@@ -55,9 +57,7 @@ const Index_follow = () => {
       }
     }
 
-    useEffect(() => {
-      fetchPosts(true)
-    }, [freshPostCnt, user])
+
 
   return (
     <MasonryFlashList
@@ -100,4 +100,4 @@ const Index_follow = () => {
   )
 }
 
-export default Index_follow
+export default FollowPage

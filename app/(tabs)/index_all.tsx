@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StatusBar, Pressable, Image } from "react-native";
-import { MasonryFlashList } from "@shopify/flash-list";
-import { getPosts } from "@/lib/appwrite";
 import { useGlobalContext } from "@/context/GlobalContext";
+import { getPosts } from "@/lib/appwrite";
+import { MasonryFlashList } from "@shopify/flash-list";
 import { router } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { Image, Pressable, Text, View } from "react-native";
 
 const Index_all = () => {
 
@@ -39,6 +39,7 @@ const Index_all = () => {
         setPageNumber(page + 1)
         setHasMore(newPosts.length === pageSize)
       } catch (error) {
+        console.log('获取帖子失败')
         console.log(error)
       } finally {
         setLoading(false)

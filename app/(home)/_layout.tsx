@@ -5,7 +5,7 @@ const homeLayout = () => {
   return (
     <Slot />
     // <PostAdd />
-    // <FoundPage />
+    // <FollowPage />
     // <aA />
   )
 }

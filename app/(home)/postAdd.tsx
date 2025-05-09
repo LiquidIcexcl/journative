@@ -34,6 +34,7 @@ export default function PostAdd() {
       refreshPosts()
       router.push('/')
     } catch (error) {
+      console.log('发布失败');
       console.log(error)
       setLoading(false)
       Alert.alert('发布失败')
@@ -56,6 +57,7 @@ export default function PostAdd() {
       )
       return mainpResult
     } catch (error) {
+      console.log('压缩图片失败')
       console.log(error)
       return null
     }
@@ -81,6 +83,7 @@ export default function PostAdd() {
         }
       }
     } catch (error) {
+      console.log('选择图片失败')
       console.log(error)
       Alert.alert('图片选择失败')
     }

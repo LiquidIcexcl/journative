@@ -19,6 +19,7 @@ const sign_in = () => {
             router.push('/')
             refreshUser()
         } catch (error) {
+            console.log('登录失败');
             console.log(error)
             Alert.alert('登录失败', '请检查邮箱和密码')
             setLoading(false)

@@ -10,10 +10,13 @@ const collectionIdFollow="6816c7c2000b6360b84d"
 const collectionIdPost = "6816c7ce0026b1143612"
 const collectionIdComment = "6816c7c80037305d9a4c"
 
-const client = new Client()
+let client: Client;
+
+
+client = new Client()
 .setEndpoint('https://fra.cloud.appwrite.io/v1')
 .setProject(projectId)
-.setPlatform('org.liquid.journative');
+// .setPlatform('journative'); 
 
 const account = new Account(client)
 const database = new Databases(client)
@@ -39,6 +42,7 @@ export const uploadFile = async (image_key: string, file: ImageResult) => {
         }
         
     } catch (error) {
+        console.log("uploadFile error", error);
         console.log(error)
         throw error
     }
@@ -56,6 +60,7 @@ const createUser = async (email: string, name: string, user_id: string, avatar_u
         })
         return user.$id
     } catch (error) {
+        console.log('createUser error', error);
         console.log(error)
         throw error
     }
@@ -76,6 +81,7 @@ export const login = async (email: string, password: string) => {
         const res = await account.createEmailPasswordSession(email, password)
         return res
     } catch (error) {
+        console.log('login error', error)
         console.log(error)
         throw error
     }
@@ -85,6 +91,7 @@ export const logout = async () => {
     try {
         await account.deleteSession('current')
     } catch (error) {
+        console.log('logout error', error)
         console.log(error)
         throw error
     }
@@ -100,6 +107,7 @@ export const register = async (email: string, password: string, name: string) =>
         await login(email, password)
         return user.$id
     } catch (error) {
+        console.log('register error', error)
         console.log(error)
         throw error
     }
@@ -119,6 +127,7 @@ export const getCurrentUser = async () => {
 
     return null
 }
+  
 
 // 1. post
 export const createPost = async (title: string, content: string, image_url: string, creator_id: string, creator_name: string, creator_avatar_url: string) => {
@@ -133,6 +142,7 @@ export const createPost = async (title: string, content: string, image_url: stri
         })
         return post.$id
     } catch (error) {
+        console.log('createPost error', error)
         console.log(error)
         throw error
     }
@@ -143,6 +153,7 @@ export const getPostById = async (post_id: string) => {
         const res = await database.getDocument(databaseId, collectionIdPost, post_id)
         return res
     } catch (error) {
+        console.log('getPostById error', error)
         console.log(error)
         throw error
     }
@@ -157,6 +168,7 @@ export const getPosts = async (pageNumber: number, pageSize: number, userIds?: s
         const posts = await database.listDocuments(databaseId, collectionIdPost, queries)
         return posts.documents
     } catch (error) {
+        console.log('getPosts error', error)
         console.log(error)
         return []
     }
@@ -199,6 +211,7 @@ export const followUser = async (from_user_id: string, to_user_id: string) => {
         })
         return res
     } catch (error) {
+        console.log('followUser error', error)
         console.log(error)
         throw error
     }
@@ -215,6 +228,7 @@ export const unFollowUser = async (from_user_id: string, to_user_id: string) => 
         return null
 
     } catch (error) {
+        console.log('unFollowUser error', error)
         console.log(error)
         throw error
     }
@@ -227,9 +241,9 @@ export const getFollowingUsers = async (user_id: string) => {
         )
         return res.documents.map((item) => item.to_user_id)
     } catch (error) {
+        console.log('getFollowingUsers error', error)
         console.log(error)
         throw error
     }
 }
-
 

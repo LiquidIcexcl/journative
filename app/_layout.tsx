@@ -9,6 +9,10 @@ import { GlobalContextProvider } from '@/context/GlobalContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import '../global.css';
 
+global.__reanimatedWorkletInit = () => {
+  'worklet';
+}
+
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
@@ -17,6 +21,7 @@ export default function RootLayout() {
 
   if (!loaded) {
     // Async font loading only occurs in development.
+    // 异步字体加载仅在开发中发生。
     return null;
   }
 
@@ -24,13 +29,14 @@ export default function RootLayout() {
     <GlobalContextProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(test)" options={{ headerShown: false }} />
+        <Stack> 
+          {/* <Stack.Screen name="(test)" options={{ headerShown: false }} /> */}
+          {/* <Stack.Screen name='(auth)' options={{ headerShown: false }} /> */}
           <Stack.Screen name="(home)" options={{ headerShown: false }} />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name='(auth)' options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-          <Stack.Screen name="detail/[post_id]" options={{headerShown: false}}/>
+          {/* <Stack.Screen name="(tabs)" options={{ headerShown: false }} /> */}
+          
+          {/* <Stack.Screen name="+not-found" /> */}
+          {/* <Stack.Screen name="detail/[post_id]" options={{headerShown: false}}/> */}
         </Stack>
         <StatusBar style="auto" />
       </ThemeProvider>

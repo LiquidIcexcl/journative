@@ -18,7 +18,7 @@ const AA = () => {
             setLoading(false)
             router.push('/')
             refreshUser()
-        } catch (error) {
+        } catch (error) { 
             console.log(error)
             Alert.alert('登录失败', '请检查邮箱和密码')
             setLoading(false)

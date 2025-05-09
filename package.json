@@ -59,5 +59,11 @@
     "eslint-config-expo": "~9.2.0",
     "typescript": "~5.8.3"
   },
+  "overrides": {
+    "react-native-appwrite": {
+      "expo-file-system": "18.*.*",
+      "react-native": ">=0.76.7 <1.0.0"
+    }
+  },
   "private": true
 }

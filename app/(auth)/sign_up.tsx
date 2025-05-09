@@ -20,6 +20,7 @@ const sign_up = () => {
             router.push('/')
             refreshUser()
         } catch (error) {
+            console.log('注册失败');
             console.log(error)
             Alert.alert('注册失败', '请检查邮箱和密码')
             setLoading(false)

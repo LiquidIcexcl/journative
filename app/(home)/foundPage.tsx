@@ -16,6 +16,10 @@ const FoundPage = () => {
     const [hasMore, setHasMore] = useState(true)
     const [refreshing, setRefreshing] = useState(false)
 
+    useEffect(() => {
+      fetchPosts(true)
+    }, [freshPostCnt])
+
     const fetchPosts = async (isRefresh = false) => {
       if (loading) return
       setLoading(true)
@@ -39,6 +43,7 @@ const FoundPage = () => {
         setPageNumber(page + 1)
         setHasMore(newPosts.length === pageSize)
       } catch (error) {
+        console.log('获取帖子失败')
         console.log(error)
       } finally {
         setLoading(false)
@@ -46,9 +51,7 @@ const FoundPage = () => {
       }
     }
 
-    useEffect(() => {
-      fetchPosts(true)
-    }, [freshPostCnt])
+    
 
   return (
     <MasonryFlashList

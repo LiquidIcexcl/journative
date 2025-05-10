@@ -1,13 +1,13 @@
 import React, { FC, useCallback, useState } from 'react';
 import {
-    LayoutRectangle,
-    Modal,
-    Platform,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    ViewStyle
+  LayoutRectangle,
+  Modal,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle
 } from 'react-native';
 
 interface ButtonLayout extends LayoutRectangle {}
@@ -56,7 +56,7 @@ interface PopMenuProps {
         ref={handleRef}
         onPress={() => setMenuVisible(true)}
       >
-        <Text style={{ fontSize: 24 }}>⋯</Text>
+        <Text className='text-myPriFont mb-3' style={{ fontSize: 24 }}>⋯</Text>
       </TouchableOpacity>
 
       <Modal visible={menuVisible} transparent animationType="fade">

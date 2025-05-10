@@ -1,9 +1,10 @@
 import PopMenu from '@/components/PopMenu';
+import PopPage from '@/components/PopPage';
 import { PAGE_INFO } from '@/constants/pageInfo';
+import { BlurView } from 'expo-blur';
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import PopPage from '../../components/PopPage';
 import PostAdd from './postAdd';
 const homePage = () => {
     const [postAddVisible, setPostAddVisible] = useState(false);
@@ -82,18 +83,24 @@ const homePage = () => {
                 </View> 
 
         
-                {/* 这里是底部导航栏 */} 
-                <View className='absolute bottom-0 w-full bg-myBG items-center mb-12 h-32'>
-                    <TouchableOpacity style={styles.customButton} onPress={() => {setPostAddVisible(true)}}>
-                        <Text style={styles.buttonText}>+</Text>
-                        <PopPage
-                            visible={postAddVisible}
-                            onClose={() => setPostAddVisible(false)}
-                            height="800"
-                            contentComponent={<PostAdd />}
-                        />        
-                    </TouchableOpacity>
-                </View>  
+                {/* 这里是底部导航栏 */}  
+                    <BlurView className='absolute bottom-0 w-full bg-myBG items-center mb-12 h-32'
+                            intensity={60}
+                            tint="dark" // 模糊叠加红色透明层
+                    >
+                    
+                            <TouchableOpacity style={styles.customButton} onPress={() => {setPostAddVisible(true)}}>
+                                <Text style={styles.buttonText}>+</Text>
+                                <PopPage
+                                    visible={postAddVisible}
+                                    onClose={() => setPostAddVisible(false)}
+                                    height="980"
+                                    contentComponent={<PostAdd />}
+                                />        
+                            </TouchableOpacity> 
+                    
+                    
+                    </BlurView>   
         </SafeAreaView>
     )
     }

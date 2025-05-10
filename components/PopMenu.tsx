@@ -110,9 +110,12 @@ interface PopMenuProps {
 const styles = StyleSheet.create({
   menuContainer: {
     position: 'absolute',
-    backgroundColor: 'white',
+    backgroundColor: '#07070F',
     width: 150,
     paddingVertical: 8,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgb(28, 10, 56)',
   } as const,
   optionItem: {
     paddingHorizontal: 16,
@@ -120,7 +123,7 @@ const styles = StyleSheet.create({
   } as const,
   optionText: {
     fontSize: 16,
-    color: Platform.OS === 'ios' ? '#007AFF' : '#6200EE',
+    color: Platform.OS === 'ios' ? '#5E5BE6' : '#5E5BE6',
   } as const,
 });
 

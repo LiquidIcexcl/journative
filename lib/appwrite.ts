@@ -1,5 +1,6 @@
+import * as FileSystem from 'expo-file-system';
 import { ImageResult } from 'expo-image-manipulator';
-import { Account, Avatars, Client, Databases, ID, ImageGravity, Query, Storage } from 'react-native-appwrite';
+import { Account, Avatars, Client, Databases, ID, Query, Storage } from 'react-native-appwrite';
 import { User } from './modal';
 
 const databaseId = "6816bee7001e6018e128";
@@ -22,6 +23,7 @@ const account = new Account(client)
 const database = new Databases(client)
 const avatars = new Avatars(client)
 const storage = new Storage(client)
+ 
 
 // 检查当前用户是否登录（存在会话）
 export const checkLogin = async () => {
@@ -40,19 +42,27 @@ export const checkLogin = async () => {
     }
 }
 
-export const uploadFile = async (image_key: string, file: ImageResult) => {
-    try {
-        const res = await storage.createFile(bucketId, image_key, {
+export const uploadFile = async (image_key: string, image_type: string, file: ImageResult|{ uri: string }) => {
+    try { 
+        let finalUri = file.uri;
+        const fileInfo = await FileSystem.getInfoAsync(finalUri);
+        if (!fileInfo.exists) throw new Error("文件不存在"); 
+        let finalSize = (fileInfo as any).size;
+        const res = await storage.createFile(bucketId, ID.unique(), {
             name: image_key,
-            type: 'image/jpeg',
-            size: file.height * file.width,
-            uri: file.uri
+            type: image_type = image_type==="image"?'image/jpeg':'video/mp4',
+            size: image_type === "image" 
+            ? (file as ImageResult).height * (file as ImageResult).width 
+            : finalSize,
+            uri: finalUri
         })
 
         const fileId = res.$id
         
-        const fileUrl = storage.getFilePreview(bucketId, fileId, 640, 640, ImageGravity.Top, 100)
-
+        // const fileUrl = storage.getFilePreview(bucketId, fileId, 640, 360, ImageGravity.Top, 100)
+        const fileUrl = storage.getFileView(bucketId, fileId)
+        console.log('fileUrl', fileUrl);
+        
         return {
             fileId,
             fileUrl
@@ -65,14 +75,26 @@ export const uploadFile = async (image_key: string, file: ImageResult) => {
     }
 }
 
+export const getFileByFileId = (fileId: string) => { 
+    try {
+        const fileUrl = storage.getFileView(bucketId, fileId)
+        return fileUrl
+    } catch (error) {
+        console.log('getFileByFileId error', error)
+        console.log(error)
+        throw error
+    }
+}
+
 // 登录部分API
 
-const createUser = async (email: string, name: string, user_id: string) => {
+const createUser = async (email: string, name: string, user_id: string, imageuri: string) => {
     try {
         const user = await database.createDocument(databaseId, collectionIdUser, ID.unique(), {
             email,
             name,
             user_id, 
+            avatar_url: imageuri
         })
         return user.$id
     } catch (error) {
@@ -114,13 +136,13 @@ export const logout = async () => {
     }
 }
 
-export const register = async (email: string, password: string, name: string) => {
+export const register = async (email: string, password: string, name: string, imageuri: string) => {
     try {
         await account.deleteSessions().catch(() => { }); // 删除当前身份
         // 1. 注册
         const user = await account.create(ID.unique(), email, password, name)
         // const avatarUrl = avatars.getInitials(name)
-        const res = await createUser(email, name, user.$id)
+        const res = await createUser(email, name, user.$id, imageuri)
         // 2. 登录
         await login(email, password)
         return user.$id
@@ -148,12 +170,13 @@ export const getCurrentUser = async () => {
   
 
 // 1. post
-export const createPost = async (title: string, content: string, image_url: string, creator_id: string, creator_name: string, creator_avatar_url: string) => {
+export const createPost = async (title: string, content: string, image_first_url: string,images_url: string[], creator_id: string, creator_name: string, creator_avatar_url: string) => {
     try {
         const post = await database.createDocument(databaseId, collectionIdPost, ID.unique(), {
             title,
             content,
-            image_url,
+            image_first_url,
+            images_url,
             creator_id,
             creator_name,
             creator_avatar_url

@@ -102,13 +102,13 @@ const ImageUploadButton = ({ onUploadSuccess }: Props) => {
           <View style={{
             width: 30,
             height: 4,
-            backgroundColor: '#4CAF50',
+            backgroundColor: '#5E5BE6',
             position: 'absolute',
           }}/>
           <View style={{
             width: 4,
             height: 30,
-            backgroundColor: '#4CAF50',
+            backgroundColor: '#5E5BE6',
             position: 'absolute',
           }}/>
         </View>

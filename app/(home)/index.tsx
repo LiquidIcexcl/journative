@@ -1,7 +1,10 @@
 import PopMenu from '@/components/PopMenu';
 import PopPage from '@/components/PopPage';
 import { PAGE_INFO } from '@/constants/pageInfo';
+import { useGlobalContext } from '@/context/GlobalContext';
+import { logout } from '@/lib/appwrite';
 import { BlurView } from 'expo-blur';
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -9,6 +12,7 @@ import PostAdd from './postAdd';
 const homePage = () => {
     const [postAddVisible, setPostAddVisible] = useState(false);
     const [pageName, setPageName] = useState<keyof typeof PAGE_INFO>('FoundPage'); // 用于存储当前页面名称
+    const {user, refreshUser} = useGlobalContext()
     // const [isHome, setIsHome] = React.useState(true); // 用于存储当前页面索引
     let isHome = pageName === 'FoundPage' ? true : false; // 判断当前页面是否是首页
 
@@ -16,6 +20,12 @@ const homePage = () => {
         setPageName(page);
         // setIsHome(page === 'FoundPage'); // 更新当前页面索引
     }
+    const handleLogout = async () => {
+        console.log("用户退出登入....");
+        await logout()
+        router.push({ pathname: '/' })
+        refreshUser()
+      }
 
     const pageInfo = PAGE_INFO[pageName] as { component: React.ComponentType };
    
@@ -59,18 +69,25 @@ const homePage = () => {
                         <View className='m-2 color-myPriFont'>
                             <Text>搜索</Text>
                         </View>
-                        <View className='m-2 color-myPriFont'>
-                            <PopMenu
-                                options={[
-                                    { label: '账户1设置', onPress: () => console.log('Edit1') },
-                                    { label: '夜间模式', onPress: () => console.log('Share') },
-                                    { label: '日间模式', onPress: () => console.log('Delete') },
-                                    { label: '浏览记录', onPress: () => console.log('Report') },
-                                ]}
-                                triggerStyle={{ backgroundColor: 'red' }}
-                                menuWidth={200}
-                            />
-                        </View>
+                        {/* <BlurView className='m-2 color-myPriFont rounded-full m-1.5'
+                            intensity={50}
+                            tint="light" // 模糊叠加红色透明层
+                            style={{ borderRadius: 600, justifyContent: 'flex-start', alignItems: 'center' }}
+                        > */}
+                            <View className='m-2 h-7 bg-mySpan color-myPriFont rounded-full mr-4'>
+                                <PopMenu
+                                    options={[
+                                        { label: '账户设置', onPress: () => console.log('Edit1') },
+                                        { label: '夜间模式', onPress: () => console.log('Share') },
+                                        { label: '日间模式', onPress: () => console.log('Delete') },
+                                        { label: '浏览记录', onPress: () => console.log('Report') },
+                                        { label: '退出登入', onPress: () => handleLogout() },
+                                    ]}
+                                    triggerStyle={{ backgroundColor: 'red' }}
+                                    menuWidth={200}
+                                />
+                            </View>
+                        {/* </BlurView> */}
                     </View>
                     
                 </View> 

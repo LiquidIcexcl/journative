@@ -1,8 +1,8 @@
-import { View, Text, SafeAreaView, ScrollView, Image, Pressable, TextInput } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { useLocalSearchParams } from 'expo-router'
 import { useGlobalContext } from '@/context/GlobalContext'
 import { createComment, followUser, getCommentsByPostId, getFollowingUsers, getPostById, getUserByUserId, unFollowUser } from '@/lib/appwrite'
+import { useLocalSearchParams } from 'expo-router'
+import React, { useEffect, useState } from 'react'
+import { Image, Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from 'react-native'
 const Detail = () => {
 
   const { post_id } = useLocalSearchParams()
@@ -91,7 +91,7 @@ const Detail = () => {
         {/* 第二行 */}
         <View className='flex-1'>
           <Image
-            source={{ uri: post?.image_url }}
+            source={{ uri: post?.image_first_url }}
             className='w-full h-[500px]'
           />
           <Text className='text-lg font-semibold mt-2'>{post?.title}</Text>

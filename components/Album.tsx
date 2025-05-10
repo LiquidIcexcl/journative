@@ -25,6 +25,7 @@ export interface MediaAsset {
   duration: number; // 媒体资源的持续时间（仅对视频有效）
   creationTime: number; // 媒体资源的创建时间戳
   index?: number;   // 媒体资源在选择列表中的索引（可选）
+  type?: string;    // 媒体资源的类型（可选）
 }
 
 // AlbumPicker组件的属性定义
@@ -230,7 +231,8 @@ const formatDuration = (seconds: number) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: 300,
+    // flex: 1,
     backgroundColor: 'white'
   },
   loadingContainer: {

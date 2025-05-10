@@ -1,9 +1,10 @@
 import { useGlobalContext } from "@/context/GlobalContext";
 import { getPosts } from "@/lib/appwrite";
 import { MasonryFlashList } from "@shopify/flash-list";
+import { BlurView } from "expo-blur";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Image, Pressable, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 const FoundPage = () => {
 
@@ -68,30 +69,67 @@ const FoundPage = () => {
       }}
       onEndReachedThreshold={0.7}
       renderItem={({ item }) => 
+        <BlurView 
+        intensity={80}         // 模糊强度 (0-100)
+        tint="dark"          // 底色滤镜 (light/default/dark) 
+        style={styles.blur}   
+        >
         <Pressable
-          className="flex-1 flex-col bg-myWhite rounded-sm m-1"
+          className="flex-1 flex-col rounded-sm m-1"
           onPress={() => {
             router.push(`/detail/${item?.$id}`)
           }}
         >
-          <Image source={{ uri: item?.image_url }}
+          <Image source={{ uri: item?.image_first_url }}
             style={{
               width: '100%',
-              height: 200,
-              maxHeight: 270,
+              height: '80%',
+              // maxHeight: 270,
               aspectRatio: 1,
             }}
             resizeMode="cover"
           />
           <View className="flex-col">
-            <Text className="font-bold mt-1 text-md">{item?.title}</Text>
-            <Text className="text-sm  mt-1">{item?.content}</Text>
+            {/* <Text className="font-bold mt-1 text-md text-myPriFont">{item?.title}</Text> */}
+            {/* <Text className="text-sm text-mySecFont mt-1">{item?.content}</Text> */}
+            <Text className="text-sm text-mySecFont mt-1">{item?.image_first_url}</Text>
           </View>
         </Pressable>
+        </BlurView>
       }
       estimatedItemSize={200}
     />
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  blur: { 
+    backgroundColor: 'rgba(10, 17, 44, 0.64)', // 设置背景颜色
+    // 投影 
+    shadowColor: '#FFFFFF',
+    shadowOffset: {
+      width: 1,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 2, 
+    borderRadius: 2, 
+    margin: 2,
+    justifyContent: 'center',
+    overflow: 'hidden', // 确保圆角效果
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderWidth: 1,
+  },
+  text: {
+    fontSize: 24,
+    fontWeight: '600',
+    textAlign: 'center'
+  }
+});
 
 export default FoundPage

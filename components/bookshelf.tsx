@@ -316,12 +316,14 @@ const Bookshelf = ({ assets: initialAssets }: BookshelfProps) => {
 
 const styles = StyleSheet.create({
   root: {
+    // backgroundColor: '#07070F',
     flex: 1,
   },
   container: {
     width: SCREEN_WIDTH,
     minHeight: BOOKSHELF_HEIGHT,
-    backgroundColor: '#f5f5f5',
+    // backgroundColor: '#f5f5f5',
+    borderWidth: 1,
     borderRadius: 8,
     marginVertical: 16,
   },

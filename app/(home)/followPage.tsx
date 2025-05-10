@@ -75,12 +75,12 @@ const FollowPage = () => {
       onEndReachedThreshold={0.7}
       renderItem={({ item }) => 
         <Pressable
-          className="flex-1 flex-col bg-myWhite rounded-sm m-1"
+          className="flex-1 flex-col bg-myBG rounded-sm m-1"
           onPress={() => {
             router.push(`/detail/${item?.$id}`)
           }}
         >
-          <Image source={{ uri: item?.image_url }}
+          <Image source={{ uri: item?.image_first_url }}
             style={{
               width: '100%',
               height: 200,
@@ -95,6 +95,11 @@ const FollowPage = () => {
           </View>
         </Pressable>
       }
+      contentContainerStyle={{
+        backgroundColor: 'black',
+        // paddingBottom: 100,
+        // paddingTop: 10,
+      }}
       estimatedItemSize={200}
     />
   )

@@ -80,7 +80,7 @@ const Index_follow = () => {
             router.push(`/detail/${item?.$id}`)
           }}
         >
-          <Image source={{ uri: item?.image_url }}
+          <Image source={{ uri: item?.image_first_url }}
             style={{
               width: '100%',
               height: 200,

@@ -23,6 +23,23 @@ const database = new Databases(client)
 const avatars = new Avatars(client)
 const storage = new Storage(client)
 
+// 检查当前用户是否登录（存在会话）
+export const checkLogin = async () => {
+    try {
+        const res = await account.get().catch(() => { }); // 获取当前用户会话
+        if (res && res.$id) {
+            console.log('用户会话存在');
+            return true
+        }
+        console.log('用户会话不存在');
+        return false
+    } catch (error) {
+        console.log('checkLogin error', error)
+        console.log(error)
+        return false
+    }
+}
+
 export const uploadFile = async (image_key: string, file: ImageResult) => {
     try {
         const res = await storage.createFile(bucketId, image_key, {
@@ -50,13 +67,12 @@ export const uploadFile = async (image_key: string, file: ImageResult) => {
 
 // 登录部分API
 
-const createUser = async (email: string, name: string, user_id: string, avatar_url: string) => {
+const createUser = async (email: string, name: string, user_id: string) => {
     try {
         const user = await database.createDocument(databaseId, collectionIdUser, ID.unique(), {
             email,
             name,
-            user_id,
-            avatar_url
+            user_id, 
         })
         return user.$id
     } catch (error) {
@@ -78,6 +94,7 @@ export const getUserByUserId = async (user_id: string) => {
 
 export const login = async (email: string, password: string) => {
     try {
+        await account.deleteSessions().catch(() => { }); // 删除当前身份
         const res = await account.createEmailPasswordSession(email, password)
         return res
     } catch (error) {
@@ -99,10 +116,11 @@ export const logout = async () => {
 
 export const register = async (email: string, password: string, name: string) => {
     try {
+        await account.deleteSessions().catch(() => { }); // 删除当前身份
         // 1. 注册
         const user = await account.create(ID.unique(), email, password, name)
-        const avatarUrl = avatars.getInitials(name)
-        const res = await createUser(email, name, user.$id, avatarUrl.toString())
+        // const avatarUrl = avatars.getInitials(name)
+        const res = await createUser(email, name, user.$id)
         // 2. 登录
         await login(email, password)
         return user.$id
@@ -246,4 +264,6 @@ export const getFollowingUsers = async (user_id: string) => {
         throw error
     }
 }
+
+export { account, client };
 

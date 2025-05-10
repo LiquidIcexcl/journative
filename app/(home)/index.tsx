@@ -47,7 +47,7 @@ const homePage = () => {
                             <Text className='m-2 color-myPriFont'>发现</Text>
                         </Pressable>
 
-                        <Text className='m-2 color-myPriFont'>  </Text>
+                        <Text className='color-myPriFont'></Text>
                         <Pressable onPress={() => handlePageChange('FollowPage')}>
                             <Text className='m-2 color-myPriFont'>关注</Text>
                         </Pressable>

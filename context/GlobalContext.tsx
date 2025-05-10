@@ -1,6 +1,6 @@
 import { getCurrentUser } from "@/lib/appwrite"
 import { User } from "@/lib/modal"
-import { createContext, useContext, useEffect, useState } from "react"
+import React, { createContext, useContext, useEffect, useState } from "react"
 
 type GlobalContextType = {
     user: User
@@ -8,6 +8,7 @@ type GlobalContextType = {
     refreshUser: () => void
     refreshPosts: () => void,
     freshPostCnt: number
+    isLoading: boolean
 }
 
 const GlobalContext = createContext<GlobalContextType>({
@@ -20,7 +21,8 @@ const GlobalContext = createContext<GlobalContextType>({
     setUser: () => {},
     refreshUser: () => {},
     refreshPosts: () => {},
-    freshPostCnt: 0
+    freshPostCnt: 0, 
+    isLoading: true
 })
 
 export const useGlobalContext = () => {
@@ -37,6 +39,8 @@ export const GlobalContextProvider = ({children}: {children: React.ReactNode}) =
 
     const [refreshCnt, setRefreshUserCnt] = useState(0)
     const [refreshPostsCnt, setRefreshPostsCnt] = useState(0)
+    const [isLoading, setIsLoading] = useState(true)
+        
 
     const getUserInfo = async () => {
         try {
@@ -46,12 +50,16 @@ export const GlobalContextProvider = ({children}: {children: React.ReactNode}) =
             }
         } catch (error) {
             console.log(error)
+            console.log('getUserInfo error', error);
+            
             setUser({
                 userId: '',
                 name: "",
                 email: "",
                 avatarUrl: ""
             })
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -71,7 +79,8 @@ export const GlobalContextProvider = ({children}: {children: React.ReactNode}) =
                     refreshPosts: () => {
                         setRefreshPostsCnt(prev => prev + 1)
                     },
-                    freshPostCnt: refreshPostsCnt
+                    freshPostCnt: refreshPostsCnt,
+                    isLoading: isLoading
                 }
             }   
         >

@@ -88,13 +88,13 @@ export const getFileByFileId = (fileId: string) => {
 
 // 登录部分API
 
-const createUser = async (email: string, name: string, user_id: string, imageuri: string) => {
+const createUser = async (email: string, name: string, user_id: string, avatar_url: string) => {
     try {
         const user = await database.createDocument(databaseId, collectionIdUser, ID.unique(), {
             email,
             name,
             user_id, 
-            avatar_url: imageuri
+            avatar_url
         })
         return user.$id
     } catch (error) {

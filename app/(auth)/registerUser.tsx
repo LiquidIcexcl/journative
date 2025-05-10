@@ -35,8 +35,9 @@ const registerUser = () => {
             <View className='flex-1 flex-col mx-2 mt-64'>
 
                 <Text className='text-3xl font-bold text-myPriFont text-center mb-10'>注册</Text>
-
-                <ImageUploadButton onUploadSuccess={(uri) => setImageUri(uri)} />
+                <View className='flex-row justify-center'>
+                    <ImageUploadButton onUploadSuccess={(uri) => setImageUri(uri)} />
+                </View>
                 <Text className='text-myPriFont text-center mt-2'>上传头像</Text>                                               
 
                 <TextInput

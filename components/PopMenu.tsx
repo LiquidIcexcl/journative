@@ -56,7 +56,7 @@ interface PopMenuProps {
         ref={handleRef}
         onPress={() => setMenuVisible(true)}
       >
-        <Text className='text-myPriFont mb-3' style={{ fontSize: 24 }}>⋯</Text>
+        <Text className='text-myPriFont mb-3.5' style={{ fontSize: 24 }}>⋯</Text>
       </TouchableOpacity>
 
       <Modal visible={menuVisible} transparent animationType="fade">

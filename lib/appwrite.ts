@@ -152,7 +152,11 @@ export const register = async (email: string, password: string, name: string, im
         throw error
     }
 }
-
+// 在appwrite.ts中添加
+export const getFileDownloadUrl = (fileId: string) => {
+    return storage.getFileDownload(bucketId, fileId);
+  };
+  
 export const getCurrentUser = async () => {
     const res = await account.get()
     if (res.$id) {
@@ -167,7 +171,19 @@ export const getCurrentUser = async () => {
 
     return null
 }
-  
+// 在appwrite.ts中添加
+export const getFileInfo = async (fileId: string) => {
+    try {
+      const fileInfo = await storage.getFile(bucketId, fileId);
+      return {
+        mimeType: fileInfo.mimeType,
+        fileUrl: storage.getFileView(bucketId, fileId).toString()
+      };
+    } catch (error) {
+      console.error('Error getting file info:', error);
+      throw error;
+    }
+  };
 
 // 1. post
 export const createPost = async (title: string, content: string, image_first_url: string,images_url: string[], creator_id: string, creator_name: string, creator_avatar_url: string) => {

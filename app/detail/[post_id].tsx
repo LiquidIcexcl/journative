@@ -12,6 +12,8 @@ const Detail = () => {
   const [creatorName, setCreatorName] = useState<any>(null)
   const [creatorAvatar, setCreatorAvatar] = useState<any>(null)
   const [isFollowed, setIsFollowed] = useState<any>(false)
+  const [isFullScreen, setIsFullScreen] = useState<any>(false)
+  const [initVideoIndex, setInitVideoIndex] = useState<any>(0)
 
   const [comment, setComment] = useState<any>('')
   const [comments, setComments] = useState<any>([])
@@ -33,6 +35,7 @@ const Detail = () => {
       setCreatorAvatar(creator?.avatar_url)
       setIsFollowed(isFollowed)
       setComments(comments)
+      setInitVideoIndex(post?.hasVideo)
 
     } catch (error) {
       console.log('getData error', error)
@@ -63,8 +66,14 @@ const Detail = () => {
   }
 
   useEffect(() => {
-    getData()
+    getData() 
   }, [])
+
+  useEffect(() => {
+    if (initVideoIndex !== -1) {
+      setIsFullScreen(true)
+    }
+  }, [initVideoIndex])
 
 
   return (
@@ -79,6 +88,18 @@ const Detail = () => {
             />
             <Text className='font-semibold text-lg text-myPriFont'>{creatorName}</Text>
           </View>
+          <View className='flex-col items-center justify-center'>
+            <Text className='text-sm text-gray-300'>{new Date(post?.$createdAt).toLocaleDateString('zh-CN')}</Text>
+            <Pressable
+              onPress={() => {
+                setIsFullScreen(!isFullScreen)
+                // 这里可以添加全屏逻辑
+              }}
+              className='bg-myButton rounded-full px-4'
+            >
+              <Text className='text-myPriFont'>{isFullScreen ? '><':'[ ]'}</Text>
+            </Pressable>
+          </View>
           <Pressable
             onPress={handleFollow}
             className='bg-myButton rounded-full p-2 px-4'
@@ -87,77 +108,87 @@ const Detail = () => {
               {isFollowed ? '已关注' : '关注'}
             </Text>
           </Pressable>
-        </View>
-
-        {/* 第二行 */}
-        <View className='flex-1'>
-          {/* <Image
-            source={{ uri: post?.image_first_url }}
-            className='w-full h-[500px]'
-          /> */}
-          {post ? (
-          // <MediaPlayer 
-          //     mediaUris={post.images_url} 
-          // />  
-            <MediaPlayerList 
-              mediaUris={[
-                // post?.image_first_url,
-                ...(post?.images_url || [])
-              ]}
-              initialIndex={0}
-            />  
-          ) : (
-              <View className="w-full h-[500px] bg-gray-800" /> // 加载中的占位
-          )}
-          <Text className='text-lg font-semibold mt-2 text-myPriFont'>{post?.title}</Text>
-          <Text className='text-sm text-gray-300'>{post?.content}</Text>
-        </View>
-
-        {/* 第三行 */}
-        <View className='flex-row items-center justify-between mx-6 my-4 gap-2'>
-          <Image source={{ uri: user?.avatarUrl }} className='w-10 h-10 rounded-full' />
-          <TextInput
-            placeholder='添加评论'
-            placeholderTextColor={'#DFF0FD'}
-            className='flex-1 border border-myButton rounded-full p-2 text-myPriFont'
-            value={comment}
-            onChangeText={(text) => setComment(text)}
-          />
-          <Pressable
-            onPress={handleComment}
-            className='bg-myButton rounded-full p-2 px-4'
-          >
-            <Text className='text-myPriFont'>发送</Text>
-          </Pressable>
-        </View>
-
-        {/* 第四行 */}
-        <View className='px-4 pb-6'>
-          <Text className='text-lg font-bold mb-4 text-myPriFont'>全部评论 ({comments.length})</Text>
-          {
-            comments.map((comment: any) => (
-              <View
-                className='mb-2 pb-2 border-b border-myGray'
-                key={comment.$id}
-              >
-                <View className='flex-row items-center mb-2'>
-                  <Image source={{ uri: comment.from_user_avatar_url }} className='w-8 h-8 rounded-full mr-2' />
-                  <View>
-                    <Text className='font-medium text-myPriFont'>{comment.from_user_name}</Text>
-                    <Text className='text-xs text-gray-300'>
-                      {new Date(comment.$createdAt).toLocaleDateString('zh-CN')}
-                    </Text>
-                  </View>
-                  <Text className='ml-10 text-gray-500'>{comment.content}</Text>
-                </View>
+        </View> 
+        <View>
+        { isFullScreen ? (
+            <View className='flex-1 w-full h-full bg-black justify-center items-center mt-64'> 
+                <MediaPlayerList 
+                  mediaUris={[
+                    // post?.image_first_url,
+                    ...(post?.images_url || [])
+                  ]}
+                  initialIndex={0}
+                />  
+            </View>
+          ):
+          (
+            <>
+              {/* 第二行 */}
+              <View className='flex-1'> 
+                {post ? ( 
+                  <MediaPlayerList 
+                    mediaUris={[
+                      // post?.image_first_url,
+                      ...(post?.images_url || [])
+                    ]}
+                    initialIndex={0}
+                  />  
+                ) : (
+                    <View className="w-full h-[500px] bg-gray-800" /> // 加载中的占位
+                )}
+                <Text className='text-lg font-semibold mt-2 text-myPriFont'>{post?.title}</Text>
+                <Text className='text-sm text-gray-300'>{post?.content}</Text>
               </View>
-            ))
-          }
-        </View>
 
+              {/* 第三行 */}
+              <View className='flex-row items-center justify-between mx-6 my-4 gap-2'>
+                <Image source={{ uri: user?.avatarUrl }} className='w-10 h-10 rounded-full' />
+                <TextInput
+                  placeholder='添加评论'
+                  placeholderTextColor={'#DFF0FD'}
+                  className='flex-1 border border-myButton rounded-full p-2 text-myPriFont'
+                  value={comment}
+                  onChangeText={(text) => setComment(text)}
+                />
+                <Pressable
+                  onPress={handleComment}
+                  className='bg-myButton rounded-full p-2 px-4'
+                >
+                  <Text className='text-myPriFont'>发送</Text>
+                </Pressable>
+              </View>
+
+              {/* 第四行 */}
+              <View className='px-4 pb-6'>
+                <Text className='text-lg font-bold mb-4 text-myPriFont'>全部评论 ({comments.length})</Text>
+                {
+                  comments.map((comment: any) => (
+                    <View
+                      className='mb-2 pb-2 border-b border-myGray'
+                      key={comment.$id}
+                    >
+                      <View className='flex-row items-center mb-2'>
+                        <Image source={{ uri: comment.from_user_avatar_url }} className='w-8 h-8 rounded-full mr-2' />
+                        <View>
+                          <Text className='font-medium text-myPriFont'>{comment.from_user_name}</Text>
+                          <Text className='text-xs text-gray-300'>
+                            {new Date(comment.$createdAt).toLocaleDateString('zh-CN')}
+                          </Text>
+                        </View>
+                        <Text className='ml-10 text-gray-500'>{comment.content}</Text>
+                      </View>
+                    </View>
+                  ))
+                }
+              </View>
+            </>
+          )
+        }
+        </View>
       </ScrollView>
     </SafeAreaView>
   )
 }
 
 export default Detail
+ 

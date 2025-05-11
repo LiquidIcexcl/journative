@@ -16,10 +16,15 @@ const FoundPage = () => {
     const [loading, setLoading] = useState(false)
     const [hasMore, setHasMore] = useState(true)
     const [refreshing, setRefreshing] = useState(false)
+    const [hasVideo, setHasVideo] = useState(-1)
 
     useEffect(() => {
       fetchPosts(true)
     }, [freshPostCnt])
+
+    const getHasVideo = () => {
+      return hasVideo
+    }
 
     const fetchPosts = async (isRefresh = false) => {
       if (loading) return
@@ -77,6 +82,7 @@ const FoundPage = () => {
         <Pressable
           className="flex-1 flex-col rounded-sm m-1"
           onPress={() => {
+            setHasVideo(item?.has_video)
             router.push(`/detail/${item?.$id}`)
           }}
         >
@@ -92,7 +98,26 @@ const FoundPage = () => {
           <View className="flex-col">
             <Text className="font-bold mt-1 text-md text-myPriFont">{item?.title}</Text>
             <Text className="text-sm text-mySecFont mt-1">{item?.content}</Text>
-            {/* <Text className="text-sm text-mySecFont mt-1">{item?.image_first_url}</Text> */}
+            <View className="flex-row items-between justify-between mt-2"> 
+              <View className="flex-row">
+                <Image
+                  source={{ uri: item?.creator_avatar_url }}
+                  className='w-8 h-8 rounded-full'
+                />
+                <Text className="text-sm text-mySecFont mt-1 ml-1">{item?.creator_name}</Text>
+              </View>
+              <View className="flex-row">
+                <Pressable
+                  onPress={() => {
+                    setHasVideo(-1)
+                    router.push(`/detail/${item?.$id}`)
+                  }}
+                  className="flex-row items-center justify-center bg-myButton rounded-full px-4 py-1"
+                >
+                  <Text className="text-myPriFont">查看</Text>
+                </Pressable>
+              </View>
+            </View>
           </View>
         </Pressable>
         </BlurView>

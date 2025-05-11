@@ -83,16 +83,16 @@ const FoundPage = () => {
           <Image source={{ uri: item?.image_first_url }}
             style={{
               width: '100%',
-              height: '80%',
-              // maxHeight: 270,
+              // height: '80%',
+              maxHeight: 300,
               aspectRatio: 1,
             }}
             resizeMode="cover"
           />
           <View className="flex-col">
-            {/* <Text className="font-bold mt-1 text-md text-myPriFont">{item?.title}</Text> */}
-            {/* <Text className="text-sm text-mySecFont mt-1">{item?.content}</Text> */}
-            <Text className="text-sm text-mySecFont mt-1">{item?.image_first_url}</Text>
+            <Text className="font-bold mt-1 text-md text-myPriFont">{item?.title}</Text>
+            <Text className="text-sm text-mySecFont mt-1">{item?.content}</Text>
+            {/* <Text className="text-sm text-mySecFont mt-1">{item?.image_first_url}</Text> */}
           </View>
         </Pressable>
         </BlurView>

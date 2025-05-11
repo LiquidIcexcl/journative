@@ -1,3 +1,4 @@
+import MediaPlayerList from '@/components/MediaPlayerList'
 import { useGlobalContext } from '@/context/GlobalContext'
 import { createComment, followUser, getCommentsByPostId, getFollowingUsers, getPostById, getUserByUserId, unFollowUser } from '@/lib/appwrite'
 import { useLocalSearchParams } from 'expo-router'
@@ -67,7 +68,7 @@ const Detail = () => {
 
 
   return (
-    <SafeAreaView className='flex-1 bg-myWhite flex-col'>
+    <SafeAreaView className='flex-1 bg-myBG flex-col mt-8'>
       <ScrollView>
         {/* 第一行 */}
         <View className='flex-row items-center justify-between mx-6 my-4'>
@@ -76,13 +77,13 @@ const Detail = () => {
               source={{ uri: creatorAvatar }}
               className='w-10 h-10 rounded-full'
             />
-            <Text className='font-semibold text-lg'>{creatorName}</Text>
+            <Text className='font-semibold text-lg text-myPriFont'>{creatorName}</Text>
           </View>
           <Pressable
             onPress={handleFollow}
-            className='bg-myGreen rounded-full p-2 px-4'
+            className='bg-myButton rounded-full p-2 px-4'
           >
-            <Text className='text-myWhite'>
+            <Text className='text-myPriFont'>
               {isFollowed ? '已关注' : '关注'}
             </Text>
           </Pressable>
@@ -90,12 +91,26 @@ const Detail = () => {
 
         {/* 第二行 */}
         <View className='flex-1'>
-          <Image
+          {/* <Image
             source={{ uri: post?.image_first_url }}
             className='w-full h-[500px]'
-          />
-          <Text className='text-lg font-semibold mt-2'>{post?.title}</Text>
-          <Text className='text-sm text-gray-500'>{post?.content}</Text>
+          /> */}
+          {post ? (
+          // <MediaPlayer 
+          //     mediaUris={post.images_url} 
+          // />  
+            <MediaPlayerList 
+              mediaUris={[
+                // post?.image_first_url,
+                ...(post?.images_url || [])
+              ]}
+              initialIndex={0}
+            />  
+          ) : (
+              <View className="w-full h-[500px] bg-gray-800" /> // 加载中的占位
+          )}
+          <Text className='text-lg font-semibold mt-2 text-myPriFont'>{post?.title}</Text>
+          <Text className='text-sm text-gray-300'>{post?.content}</Text>
         </View>
 
         {/* 第三行 */}
@@ -103,21 +118,22 @@ const Detail = () => {
           <Image source={{ uri: user?.avatarUrl }} className='w-10 h-10 rounded-full' />
           <TextInput
             placeholder='添加评论'
-            className='flex-1 border border-gray-300 rounded-full p-2'
+            placeholderTextColor={'#DFF0FD'}
+            className='flex-1 border border-myButton rounded-full p-2 text-myPriFont'
             value={comment}
             onChangeText={(text) => setComment(text)}
           />
           <Pressable
             onPress={handleComment}
-            className='bg-myGreen rounded-full p-2 px-4'
+            className='bg-myButton rounded-full p-2 px-4'
           >
-            <Text className='text-myWhite'>发送</Text>
+            <Text className='text-myPriFont'>发送</Text>
           </Pressable>
         </View>
 
         {/* 第四行 */}
         <View className='px-4 pb-6'>
-          <Text className='text-lg font-bold mb-4'>全部评论 ({comments.length})</Text>
+          <Text className='text-lg font-bold mb-4 text-myPriFont'>全部评论 ({comments.length})</Text>
           {
             comments.map((comment: any) => (
               <View
@@ -127,8 +143,8 @@ const Detail = () => {
                 <View className='flex-row items-center mb-2'>
                   <Image source={{ uri: comment.from_user_avatar_url }} className='w-8 h-8 rounded-full mr-2' />
                   <View>
-                    <Text className='font-medium'>{comment.from_user_name}</Text>
-                    <Text className='text-xs text-gray-400'>
+                    <Text className='font-medium text-myPriFont'>{comment.from_user_name}</Text>
+                    <Text className='text-xs text-gray-300'>
                       {new Date(comment.$createdAt).toLocaleDateString('zh-CN')}
                     </Text>
                   </View>

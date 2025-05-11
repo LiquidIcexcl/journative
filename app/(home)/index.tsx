@@ -23,7 +23,7 @@ const homePage = () => {
     const handleLogout = async () => {
         console.log("用户退出登入....");
         await logout()
-        router.push({ pathname: '/' })
+        router.push({ pathname: '/(auth)/loginUser' })
         refreshUser()
       }
 

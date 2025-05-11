@@ -1,9 +1,11 @@
 import MediaPlayerList from '@/components/MediaPlayerList'
+import PopPage from '@/components/PopPage'
 import { useGlobalContext } from '@/context/GlobalContext'
 import { createComment, followUser, getCommentsByPostId, getFollowingUsers, getPostById, getUserByUserId, unFollowUser } from '@/lib/appwrite'
 import { useLocalSearchParams } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import { Image, Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from 'react-native'
+import ProfilePage from '../(public)/profile/[profile_id]'
 const Detail = () => {
 
   const { post_id } = useLocalSearchParams()
@@ -13,7 +15,8 @@ const Detail = () => {
   const [creatorAvatar, setCreatorAvatar] = useState<any>(null)
   const [isFollowed, setIsFollowed] = useState<any>(false)
   const [isFullScreen, setIsFullScreen] = useState<any>(false)
-  const [initVideoIndex, setInitVideoIndex] = useState<any>(0)
+  const [initVideoIndex, setInitVideoIndex] = useState<any>(-1)
+  const [profileVisible, setProfileVisible] = useState(false)
 
   const [comment, setComment] = useState<any>('')
   const [comments, setComments] = useState<any>([])
@@ -71,6 +74,8 @@ const Detail = () => {
 
   useEffect(() => {
     if (initVideoIndex !== -1) {
+      console.log('initVideoIndex', initVideoIndex);
+      
       setIsFullScreen(true)
     }
   }, [initVideoIndex])
@@ -81,13 +86,25 @@ const Detail = () => {
       <ScrollView>
         {/* 第一行 */}
         <View className='flex-row items-center justify-between mx-6 my-4'>
-          <View className='flex-row items-center gap-2'>
-            <Image
-              source={{ uri: creatorAvatar }}
-              className='w-10 h-10 rounded-full'
-            />
-            <Text className='font-semibold text-lg text-myPriFont'>{creatorName}</Text>
-          </View>
+          <Pressable 
+            onPress={() => {setProfileVisible(true)}}
+            // onPress={() => router.push({ pathname: '/(public)/profile/[profile_id]', params: { profile_id: creatorId } })}
+          >
+              <View className='flex-row items-center gap-2'>
+                <Image
+                  source={{ uri: creatorAvatar }}
+                  className='w-10 h-10 rounded-full'
+                />
+                <Text className='font-semibold text-lg text-myPriFont'>{creatorName}</Text> 
+              </View>
+              <PopPage
+                visible={profileVisible}
+                onClose={() => setProfileVisible(false)}
+                height="980"
+                contentComponent={<ProfilePage profile_id={creatorId} />}
+              />     
+          </Pressable>
+          
           <View className='flex-col items-center justify-center'>
             <Text className='text-sm text-gray-300'>{new Date(post?.$createdAt).toLocaleDateString('zh-CN')}</Text>
             <Pressable
@@ -102,12 +119,21 @@ const Detail = () => {
           </View>
           <Pressable
             onPress={handleFollow}
-            className='bg-myButton rounded-full p-2 px-4'
+            className={`rounded-full p-2 px-4
+               ${isFollowed ? 'bg-gray-500' : 'bg-myButton'}`}
           >
             <Text className='text-myPriFont'>
               {isFollowed ? '已关注' : '关注'}
             </Text>
           </Pressable>
+          {/* <ShareButton 
+            content={{
+              text: post?.title,
+              url: `https://example.com/posts/${post_id}`,
+              imageUri: post?.images_url?.[0],
+              title: 'Share this post'
+            }} 
+          /> */}
         </View> 
         <View>
         { isFullScreen ? (
@@ -117,7 +143,7 @@ const Detail = () => {
                     // post?.image_first_url,
                     ...(post?.images_url || [])
                   ]}
-                  initialIndex={0}
+                  initialIndex={initVideoIndex}
                 />  
             </View>
           ):

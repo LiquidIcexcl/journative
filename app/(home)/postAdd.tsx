@@ -19,6 +19,7 @@ export default function PostAdd() {
   const [mediaAssets, setMediaAssets] = useState<MediaAsset[]>([]);
   const [mediaList, setMediaList] = useState<string[]>([]);
   const [showAlbum, setShowAlbum] = useState(false);
+  const [hasVideo, setHasVideo] = useState(-1);
   
 
   const {user, refreshPosts} = useGlobalContext()
@@ -58,6 +59,7 @@ export default function PostAdd() {
     try {
       // 上传封面图片（如果存在） 
       let coverUrl = "";
+      let map_id = 1;
       // if (image && !image.startsWith('http')) {  // 如果是本地URI才上传
       //   const { fileUrl } = await uploadFile(ID.unique(), 'image', { uri: image });
       //   coverUrl = fileUrl.toString();
@@ -65,6 +67,7 @@ export default function PostAdd() {
       if (mediaAssets[0]?.uri && !mediaAssets[0].uri.startsWith('http')) {  // 如果是本地URI才上传
         // 特判mediaAssets[0]，如果是类型是视频，直接使用则压缩成图再上传
         if (mediaAssets[0].type === 'video') {
+          if(hasVideo===-1)setHasVideo(0);
           const compressed = await compressImage(mediaAssets[0].uri); 
           if (compressed) { 
             const { fileUrl } = await uploadFile(ID.unique(), 'image', { uri: compressed.uri });
@@ -76,16 +79,20 @@ export default function PostAdd() {
         }
       }
       console.log('封面图上传成功', coverUrl);
-  
+      
+      
       // 上传所有媒体资源
       const mediaUrls = await Promise.all(
         mediaAssets.map(async (asset) => {
           try {
+            map_id++;
             // 压缩图片（如果是图片）
             let processedAsset = asset;
             if (asset.type === 'image') {
               const compressed = await compressImage(asset.uri);
               processedAsset = { ...asset, uri: compressed?.uri || asset.uri };
+            } else {
+              if(hasVideo===-1)setHasVideo(map_id);
             }
   
             // 上传文件
@@ -116,7 +123,8 @@ export default function PostAdd() {
         validMediaUrls,
         user.userId,
         user.name,
-        user.avatarUrl
+        user.avatarUrl,
+        hasVideo
       );
   
       // 重置状态

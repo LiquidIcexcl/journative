@@ -9,8 +9,10 @@ import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PostAdd from './postAdd';
+import SearchPage from './search';
 const homePage = () => {
     const [postAddVisible, setPostAddVisible] = useState(false);
+    const [searchVisible, setSearchVisible] = useState(false);
     const [pageName, setPageName] = useState<keyof typeof PAGE_INFO>('FoundPage'); // 用于存储当前页面名称
     const {user, refreshUser} = useGlobalContext()
     // const [isHome, setIsHome] = React.useState(true); // 用于存储当前页面索引
@@ -39,8 +41,7 @@ const homePage = () => {
                         { isHome? 
                           ( 
                             <Pressable onPress={() => {
-                                handlePageChange('FoundPage')
-                                // isHome = false
+                                handlePageChange('ProfilePage') 
                                 }} style={{flexDirection:"row"}}>
                                 <Text className='m-2 color-myPriFont'>个人</Text>
                             </Pressable>
@@ -54,20 +55,30 @@ const homePage = () => {
 
                     <View className='flex flex-row justify-center items-center w-1/3 bg-mySpan rounded-full m-1.5'>
                         {/* <Text className='m-2 color-myPriFont items-center'>推荐</Text> */}
-                        <Pressable onPress={() => handlePageChange('FoundPage')} style={{flexDirection:"row"}}>
-                            <Text className='m-2 color-myPriFont'>发现</Text>
+                        <Pressable className='mr-16' onPress={() => handlePageChange('FoundPage')} style={{flexDirection:"column", alignItems:"center"}}>
+                            <Text className='mt-4 color-myPriFont'>发现</Text>
+                            <Text style={{borderTopWidth:1, borderColor:"#5E5BE6", opacity: pageName === 'FoundPage' ? 1 : 0 }}>         </Text>
                         </Pressable>
 
                         <Text className='color-myPriFont'></Text>
-                        <Pressable onPress={() => handlePageChange('FollowPage')}>
-                            <Text className='m-2 color-myPriFont'>关注</Text>
+                        <Pressable className='mr-2' onPress={() => handlePageChange('FollowPage')} style={{flexDirection:"column", alignItems:"center"}}>
+                            <Text className='mt-4 color-myPriFont'>关注</Text>
+                            <Text style={{borderTopWidth:1, borderColor:"#5E5BE6", opacity: pageName === 'FollowPage' ? 1 : 0}}>         </Text>
                         </Pressable>
                     </View>
 
 
                     <View className='flex flex-row justify-end items-center w-1/3'>
                         <View className='m-2 color-myPriFont'>
-                            <Text>搜索</Text>
+                            <TouchableOpacity className='w-12 h-7 bg-mySpan color-myPriFont rounded-full items-center justify-cneter' onPress={() => {setSearchVisible(true)}}>
+                                <Text className='mt-0.5 text-bold text-myPriFont'>搜索</Text>
+                                <PopPage
+                                    visible={searchVisible}
+                                    onClose={() => setSearchVisible(false)}
+                                    height="980"
+                                    contentComponent={<SearchPage />}
+                                />        
+                            </TouchableOpacity>  
                         </View>
                         {/* <BlurView className='m-2 color-myPriFont rounded-full m-1.5'
                             intensity={50}
@@ -78,8 +89,8 @@ const homePage = () => {
                                 <PopMenu
                                     options={[
                                         { label: '账户设置', onPress: () => console.log('Edit1') },
-                                        { label: '夜间模式', onPress: () => console.log('Share') },
-                                        { label: '日间模式', onPress: () => console.log('Delete') },
+                                        // { label: '夜间模式', onPress: () => console.log('Share') },
+                                        // { label: '日间模式', onPress: () => console.log('Delete') },
                                         { label: '浏览记录', onPress: () => console.log('Report') },
                                         { label: '退出登入', onPress: () => handleLogout() },
                                     ]}
@@ -146,7 +157,12 @@ const styles = StyleSheet.create({
       fontSize: 24,
       color: '#FFFFFF',
       fontWeight: 'bold',
-    }
+    },
+    underline: {
+      height: 2,
+      backgroundColor: '#3b82f6',
+      width: 0,
+    },
   });
   
 

@@ -269,6 +269,11 @@ export default function PostAdd() {
         value={content}
         onChangeText={setContent}
         className='text-myPriFont w-[450px] h-[250px] rounded-lg border-mySecFont border-b-2 mb-64 sp-2 justify-start'
+        multiline={true}                  // 启用多行输入
+        numberOfLines={4}                 // 默认显示4行
+        scrollEnabled={true}              // 内容超过高度时启用滚动
+        returnKeyType="default"           // 设置回车键行为
+        textAlignVertical="top"           // 文本顶部对齐
       />
 
       <View style={styles.buttonContainer}>

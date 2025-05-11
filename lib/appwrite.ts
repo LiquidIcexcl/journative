@@ -185,8 +185,28 @@ export const getFileInfo = async (fileId: string) => {
     }
   };
 
+// 获取用户自己的帖子
+export const getCurrentUserPosts = async (userId: string, page: number, pageSize: number) => {
+    try {
+      const posts = await database.listDocuments(
+        databaseId,
+        collectionIdPost,
+        [
+          Query.equal('creator_id', userId),
+          Query.orderDesc('$createdAt'),
+          Query.offset(page * pageSize),
+          Query.limit(pageSize)
+        ]
+      );
+      return posts.documents;
+    } catch (error) {
+      console.error('获取用户帖子失败:', error);
+      return [];
+    }
+  };
+
 // 1. post
-export const createPost = async (title: string, content: string, image_first_url: string,images_url: string[], creator_id: string, creator_name: string, creator_avatar_url: string) => {
+export const createPost = async (title: string, content: string, image_first_url: string,images_url: string[], creator_id: string, creator_name: string, creator_avatar_url: string, hasVideo: number) => {
     try {
         const post = await database.createDocument(databaseId, collectionIdPost, ID.unique(), {
             title,
@@ -195,7 +215,8 @@ export const createPost = async (title: string, content: string, image_first_url
             images_url,
             creator_id,
             creator_name,
-            creator_avatar_url
+            creator_avatar_url,
+            hasVideo
         })
         return post.$id
     } catch (error) {
@@ -258,6 +279,29 @@ export const getCommentsByPostId = async (post_id: string) => {
         throw error
     }
 }
+
+// 修改后的搜索方法（添加分页参数）
+export const searchPosts = async (query: string, page: number, pageSize: number) => {
+    try {
+      const posts = await database.listDocuments(
+        databaseId,
+        collectionIdPost,
+        [
+          Query.or([
+            Query.search('title', query),
+            Query.search('content', query)
+          ]),
+          Query.orderDesc('$createdAt'),
+          Query.offset(page * pageSize),
+          Query.limit(pageSize)
+        ]
+      );
+      return posts.documents;
+    } catch (error) {
+      console.error('搜索错误:', error);
+      return [];
+    }
+  };
 
 // 3. follow
 export const followUser = async (from_user_id: string, to_user_id: string) => {

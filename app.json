@@ -61,6 +61,13 @@
           "photosPermission": "Allow access to your photos",
           "savePhotosPermission": "Allow access to save photos"
         }
+      ],
+      [
+        "expo-video",
+        {
+          "supportsBackgroundPlayback": true,
+          "supportsPictureInPicture": true
+        }
       ]
     ],
     "experiments": {

@@ -7,9 +7,10 @@ const databaseId = "6816bee7001e6018e128";
 const projectId = "6816be9b001517c67a5c";
 const bucketId = "6816cdce000e3f0bd051";
 const collectionIdUser = "6816bf9d000fc4bfb34b";
-const collectionIdFollow="6816c7c2000b6360b84d"
-const collectionIdPost = "6816c7ce0026b1143612"
-const collectionIdComment = "6816c7c80037305d9a4c"
+const collectionIdFollow="6816c7c2000b6360b84d";
+const collectionIdPost = "6816c7ce0026b1143612";
+const collectionIdComment = "6816c7c80037305d9a4c";
+const collectionIdSuper = "682211850003cfe8b037";
 
 let client: Client;
 

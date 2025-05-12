@@ -147,7 +147,11 @@ const ProfilePage = ({ profile_id: propProfileId }: ProfilePageProps) => {
             <MasonryFlashList
               data={posts}
               numColumns={2}
-              onEndReached={() => hasMore && fetchPosts()}
+              onEndReached={() => {
+                if (hasMore && pageNumber > 0) {
+                  fetchPosts()
+                }
+              }}
               onEndReachedThreshold={0.7}
               refreshing={refreshing}
               onRefresh={() => fetchPosts(true)}

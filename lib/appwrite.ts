@@ -287,15 +287,18 @@ export const searchPosts = async (query: string, page: number, pageSize: number)
         databaseId,
         collectionIdPost,
         [
+        //   Query.contains('title', `${query}`),
           Query.or([
-            Query.search('title', query),
-            Query.search('content', query)
+            Query.contains('title', `${query}`),
+            Query.contains('content', `${query}`)
           ]),
           Query.orderDesc('$createdAt'),
           Query.offset(page * pageSize),
           Query.limit(pageSize)
         ]
       );
+      console.log('搜索结果:', posts.documents);
+      
       return posts.documents;
     } catch (error) {
       console.error('搜索错误:', error);

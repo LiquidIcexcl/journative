@@ -43,7 +43,8 @@ const SearchPage = () => {
       } else {
         setResults(prev => [...prev, ...newPosts]);
       }
-
+      console.log("搜索结果:", results);
+      
       setPageNumber(currentPage + 1);
       setHasMore(newPosts.length === pageSize);
     } catch (error) {
@@ -67,7 +68,7 @@ const SearchPage = () => {
       {/* 搜索栏（保持原有样式） */}
       <View className="p-4 bg-mySecondaryBG">
         <TextInput
-          className="h-12 bg-white rounded-lg px-4 text-myPriFont"
+          className="h-12 bg-white rounded-lg px-4 text-black"
           placeholder="搜索帖子..."
           placeholderTextColor="#6B7280"
           value={query}
@@ -79,7 +80,10 @@ const SearchPage = () => {
       <MasonryFlashList
         data={results}
         numColumns={2}
-        onEndReached={() => hasMore && fetchPosts()}
+        onEndReached={() => {
+          if (hasMore && pageNumber > 0) {
+            fetchPosts()}
+        }}
         onEndReachedThreshold={0.7}
         refreshing={refreshing}
         onRefresh={() => fetchPosts(true)}

@@ -59,7 +59,8 @@ export default function PostAdd() {
     try {
       // 上传封面图片（如果存在） 
       let coverUrl = "";
-      let map_id = 1;
+      let map_id = 0;
+      let hasVideo = -1;
       // if (image && !image.startsWith('http')) {  // 如果是本地URI才上传
       //   const { fileUrl } = await uploadFile(ID.unique(), 'image', { uri: image });
       //   coverUrl = fileUrl.toString();
@@ -67,7 +68,7 @@ export default function PostAdd() {
       if (mediaAssets[0]?.uri && !mediaAssets[0].uri.startsWith('http')) {  // 如果是本地URI才上传
         // 特判mediaAssets[0]，如果是类型是视频，直接使用则压缩成图再上传
         if (mediaAssets[0].type === 'video') {
-          if(hasVideo===-1)setHasVideo(0);
+          if(hasVideo===-1) hasVideo = map_id;
           const compressed = await compressImage(mediaAssets[0].uri); 
           if (compressed) { 
             const { fileUrl } = await uploadFile(ID.unique(), 'image', { uri: compressed.uri });
@@ -86,13 +87,15 @@ export default function PostAdd() {
         mediaAssets.map(async (asset) => {
           try {
             map_id++;
+            console.log('上传媒体资源:', map_id);
+            
             // 压缩图片（如果是图片）
             let processedAsset = asset;
             if (asset.type === 'image') {
               const compressed = await compressImage(asset.uri);
               processedAsset = { ...asset, uri: compressed?.uri || asset.uri };
             } else {
-              if(hasVideo===-1)setHasVideo(map_id);
+              if(hasVideo===-1) hasVideo = map_id;
             }
   
             // 上传文件
@@ -114,7 +117,11 @@ export default function PostAdd() {
   
       // 过滤掉上传失败的项目
       const validMediaUrls = mediaUrls.filter(url => url !== null) as string[];
-  
+
+      // 循环查找一遍数组，是否存在视频，并返回下标
+      setHasVideo(mediaUrls.findIndex(url => url && (url.endsWith('.mp4') || url.endsWith('.mov') || url.endsWith('.avi'))));
+      console.log('视频下标', hasVideo);
+      
       // 创建帖子
       const res = await createPost(
         title,
@@ -133,6 +140,7 @@ export default function PostAdd() {
       setContent('');
       setImage(null);
       setMediaAssets([]);
+      setHasVideo(-1);
       Alert.alert('发布成功');
       refreshPosts();
       router.push('/');

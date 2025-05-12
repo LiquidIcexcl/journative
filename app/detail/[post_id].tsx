@@ -73,6 +73,7 @@ const Detail = () => {
   }, [])
 
   useEffect(() => {
+    console.log('initVideoIndex', initVideoIndex);
     if (initVideoIndex !== -1) {
       console.log('initVideoIndex', initVideoIndex);
       
@@ -143,7 +144,7 @@ const Detail = () => {
                     // post?.image_first_url,
                     ...(post?.images_url || [])
                   ]}
-                  initialIndex={initVideoIndex}
+                  initialIndex={initVideoIndex-1}
                 />  
             </View>
           ):

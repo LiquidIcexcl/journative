@@ -1,9 +1,9 @@
 import React, {
-    forwardRef,
-    ForwardRefRenderFunction,
-    useImperativeHandle,
-    useRef,
-    useState
+  forwardRef,
+  ForwardRefRenderFunction,
+  useImperativeHandle,
+  useRef,
+  useState
 } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
@@ -66,7 +66,8 @@ import MediaPlayer, { MediaPlayerHandle } from './MediaPlayer';
               <MediaPlayer
                 ref={(ref) => { playersRef.current[index] = ref; }}
                 uri={item}
-                autoPlay={index === initialIndex}
+                // autoPlay={index === initialIndex}
+                autoPlay={true}
                 onPlaybackStatusUpdate={(status) => {
                   // 状态更新逻辑...
                 }}

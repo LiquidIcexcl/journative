@@ -69,7 +69,8 @@ import MediaPlayer, { MediaPlayerHandle } from './MediaPlayer';
                 // autoPlay={index === initialIndex}
                 autoPlay={true}
                 onPlaybackStatusUpdate={(status) => {
-                  // 状态更新逻辑...
+                  // 状态更新逻辑...TODO
+                  // 例如：如果视频播放完毕，自动切换到下一个视频
                 }}
               />
             </View>

@@ -6,6 +6,8 @@ import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Image, Pressable, StyleSheet, Text, View } from "react-native";
 
+const viaState: any[] = ['未审核', '已审核', '已拒绝'];
+
 const ProfilePage = () => {
   const { user, freshPostCnt } = useGlobalContext();
   const [posts, setPosts] = useState<any[]>([]);
@@ -94,8 +96,7 @@ const ProfilePage = () => {
           loading ? <ActivityIndicator size="large" className="my-4" /> : null
         }
         renderItem={({ item }) => (
-          <BlurView intensity={80} tint="dark" style={styles.blur}>
-            {/* 保持和 FoundPage 相同的渲染逻辑 */}
+          <BlurView intensity={80} tint="dark" style={styles.blur}> 
             <Pressable
               className="flex-1 flex-col rounded-sm m-1"
               onPress={() => router.push(`/detail/${item?.$id}`)}
@@ -114,6 +115,9 @@ const ProfilePage = () => {
                 >
                   {item?.content}
                 </Text>
+                <Text className="text-sm text-mySecFont w-full mt-1 text-right">
+                  {viaState[item?.via_state]}
+                </Text>
               </View>
             </Pressable>
           </BlurView>
@@ -123,8 +127,7 @@ const ProfilePage = () => {
     </View>
   );
 };
-
-// 复用 FoundPage 的样式
+ 
 const styles = StyleSheet.create({
   blur: { 
     backgroundColor: 'rgba(10, 17, 44, 0.64)',

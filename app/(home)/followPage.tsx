@@ -41,7 +41,8 @@ const FollowPage = () => {
 
       
       try {
-        const newPosts = await getPosts(page, pageSize, followingUsers)
+        let newPosts = await getPosts(page, pageSize, followingUsers)
+        newPosts = newPosts.filter((post: any) => post?.via_state === 1) 
         if (isRefresh) {
           setPosts(newPosts)
         } else {

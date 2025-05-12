@@ -67,7 +67,8 @@ const ProfilePage = ({ profile_id: propProfileId }: ProfilePageProps) => {
     }
 
     try {
-      const newPosts = await getUserPosts(profile_id, page, pageSize);
+      let newPosts = await getUserPosts(profile_id, page, pageSize);
+      newPosts = newPosts.filter((post: any) => post?.via_state === 1) 
       
       if (isRefresh) {
         setPosts(newPosts);

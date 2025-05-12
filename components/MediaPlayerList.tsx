@@ -56,7 +56,7 @@ import MediaPlayer, { MediaPlayerHandle } from './MediaPlayer';
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
-          initialScrollIndex={initialIndex}
+          initialScrollIndex={initialIndex===-1?0:initialIndex}
           onMomentumScrollEnd={handleScrollEnd}
           onScroll={(event) => {
             translateX.value = -event.nativeEvent.contentOffset.x;

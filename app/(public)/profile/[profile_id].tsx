@@ -29,6 +29,8 @@ const ProfilePage = ({ profile_id: propProfileId }: ProfilePageProps) => {
 
   // 获取用户信息
   useEffect(() => {
+    console.log('profile_id:', profile_id);
+    
     const loadUserData = async () => {
       try {
         const userData = await getUserById(profile_id!);
@@ -50,7 +52,7 @@ const ProfilePage = ({ profile_id: propProfileId }: ProfilePageProps) => {
     };
 
     if (profile_id) loadUserData();
-  }, [profile_id]);
+  }, [profile_id, refreshing]);
 
   // 获取帖子列表
   const fetchPosts = async (isRefresh = false) => {
@@ -68,6 +70,7 @@ const ProfilePage = ({ profile_id: propProfileId }: ProfilePageProps) => {
 
     try {
       let newPosts = await getUserPosts(profile_id, page, pageSize);
+      newPosts = newPosts.filter((post: any) => post?.del_flag === 0) 
       newPosts = newPosts.filter((post: any) => post?.via_state === 1) 
       
       if (isRefresh) {
@@ -148,9 +151,10 @@ const ProfilePage = ({ profile_id: propProfileId }: ProfilePageProps) => {
               data={posts}
               numColumns={2}
               onEndReached={() => {
-                if (hasMore && pageNumber > 0) {
-                  fetchPosts()
-                }
+                // if (hasMore && pageNumber > 0) {
+                //   fetchPosts()
+                // }
+                hasMore && fetchPosts()
               }}
               onEndReachedThreshold={0.7}
               refreshing={refreshing}

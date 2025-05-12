@@ -31,7 +31,8 @@ const ProfilePage = () => {
     }
 
     try {
-      const newPosts = await getCurrentUserPosts(user.userId, page, pageSize);
+      let newPosts = await getCurrentUserPosts(user.userId, page, pageSize);
+      newPosts = newPosts.filter((post: any) => post?.del_flag === 0) 
       
       if (isRefresh) {
         setPosts(newPosts);

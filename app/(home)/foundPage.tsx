@@ -42,6 +42,7 @@ const FoundPage = () => {
       try {
         let newPosts = await getPosts(page, pageSize)
         // 排除所有字段via_state!=1的帖子
+        newPosts = newPosts.filter((post: any) => post?.del_flag === 0) 
         newPosts = newPosts.filter((post: any) => post?.via_state === 1) 
         if (isRefresh) {
           setPosts(newPosts)

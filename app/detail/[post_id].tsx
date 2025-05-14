@@ -17,7 +17,7 @@ const Detail = () => {
   const [isFullScreen, setIsFullScreen] = useState<any>(false)
   const [initVideoIndex, setInitVideoIndex] = useState<any>(-1)
   const [profileVisible, setProfileVisible] = useState(false)
-
+  const [isLoading, setIsLoading] = useState(true)
   const [comment, setComment] = useState<any>('')
   const [comments, setComments] = useState<any>([])
 
@@ -39,6 +39,7 @@ const Detail = () => {
       setIsFollowed(isFollowed)
       setComments(comments)
       setInitVideoIndex(post?.hasVideo)
+      setIsLoading(false)
 
     } catch (error) {
       console.log('getData error', error)
@@ -73,7 +74,7 @@ const Detail = () => {
   }, [])
 
   useEffect(() => {
-    console.log('initVideoIndex', initVideoIndex);
+    console.log('initVideoIndex=', initVideoIndex);
     if (initVideoIndex !== -1) {
       console.log('initVideoIndex', initVideoIndex);
       
@@ -81,6 +82,20 @@ const Detail = () => {
     }
   }, [initVideoIndex])
 
+  const getinitVideoIndex = () => {
+    console.log("即将：",initVideoIndex);
+    return initVideoIndex === -1 ? 0 : initVideoIndex-1
+  }
+
+  if (isLoading) {
+    return (
+      <SafeAreaView className='flex-1 bg-myBG flex-col mt-8'>
+        <View className='flex-1 justify-center items-center'>
+          <Text className='text-myPriFont'>加载中...</Text>
+        </View>
+      </SafeAreaView>
+    )
+  }
 
   return (
     <SafeAreaView className='flex-1 bg-myBG flex-col mt-8'>
@@ -144,7 +159,7 @@ const Detail = () => {
                     // post?.image_first_url,
                     ...(post?.images_url || [])
                   ]}
-                  initialIndex={initVideoIndex-1}
+                  initialIndex={getinitVideoIndex()}
                 />  
             </View>
           ):

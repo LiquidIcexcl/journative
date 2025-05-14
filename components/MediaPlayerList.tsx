@@ -1,6 +1,7 @@
 import React, {
   forwardRef,
   ForwardRefRenderFunction,
+  useEffect,
   useImperativeHandle,
   useRef,
   useState
@@ -9,93 +10,134 @@ import { Dimensions, StyleSheet, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import Animated, { useSharedValue } from 'react-native-reanimated';
 import MediaPlayer, { MediaPlayerHandle } from './MediaPlayer';
-  
-  const { width: SCREEN_WIDTH } = Dimensions.get('window');
-  
-  type MediaPlayerListProps = {
-    mediaUris: string[];
-    initialIndex: number;
-  };
-  
-  type MediaPlayerListHandle = {
-    switchToIndex: (index: number) => void;
-  };
-  
-  const MediaPlayerListComponent: ForwardRefRenderFunction<MediaPlayerListHandle, MediaPlayerListProps> = (
-    { mediaUris, initialIndex },
-    ref
-  ) => {
-    const [currentIndex, setCurrentIndex] = useState(initialIndex);
-    const translateX = useSharedValue(-SCREEN_WIDTH * initialIndex);
-    const flatListRef = useRef<FlatList>(null);
-    const playersRef = useRef<(MediaPlayerHandle | null)[]>([]);
-  
-    useImperativeHandle(ref, () => ({
-      switchToIndex: (index: number) => {
-        flatListRef.current?.scrollToIndex({ index });
-      }
-    }));
-  
-    const handleScrollEnd = (event: { nativeEvent: { contentOffset: { x: number } } }) => {
-      const newIndex = Math.round(event.nativeEvent.contentOffset.x / SCREEN_WIDTH);
-      if (newIndex === currentIndex) return;
-  
-      // 暂停上一个视频
-      playersRef.current[currentIndex]?.pause();
-      // 播放新视频
-      playersRef.current[newIndex]?.play();
-  
-      setCurrentIndex(newIndex);
-    };
-  
-    return (
-      <Animated.View style={styles.container}>
-        <FlatList
-          ref={flatListRef}
-          data={mediaUris}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          initialScrollIndex={initialIndex===-1?0:initialIndex}
-          onMomentumScrollEnd={handleScrollEnd}
-          onScroll={(event) => {
-            translateX.value = -event.nativeEvent.contentOffset.x;
-          }}
-          renderItem={({ item, index }) => (
-            <View style={styles.itemContainer}>
-              <MediaPlayer
-                ref={(ref) => { playersRef.current[index] = ref; }}
-                uri={item}
-                // autoPlay={index === initialIndex}
-                autoPlay={true}
-                onPlaybackStatusUpdate={(status) => {
-                  // 状态更新逻辑...TODO
-                  // 例如：如果视频播放完毕，自动切换到下一个视频
-                }}
-              />
-            </View>
-          )}
-          keyExtractor={(item, index) => index.toString()}
-          getItemLayout={(_, index) => ({
-            length: SCREEN_WIDTH,
-            offset: SCREEN_WIDTH * index,
-            index
-          })}
-        />
-      </Animated.View>
-    );
-  };
-  
-  const MediaPlayerList = forwardRef(MediaPlayerListComponent);
-  export default MediaPlayerList;
-  
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      height: 500
-    },
-    itemContainer: {
-      width: SCREEN_WIDTH,
-      height: '100%'
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+
+type MediaPlayerListProps = {
+  mediaUris: string[];
+  initialIndex: number;
+};
+
+type MediaPlayerListHandle = {
+  switchToIndex: (index: number) => void;
+};
+
+const MediaPlayerListComponent: ForwardRefRenderFunction<MediaPlayerListHandle, MediaPlayerListProps> = (
+  { mediaUris, initialIndex },
+  ref
+) => {
+  const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const translateX = useSharedValue(-SCREEN_WIDTH * initialIndex);
+  const flatListRef = useRef<FlatList>(null);
+  const playersRef = useRef<(MediaPlayerHandle | null)[]>([]);
+
+  useImperativeHandle(ref, () => ({
+    switchToIndex: (index: number) => {
+      flatListRef.current?.scrollToIndex({ index });
     }
-  });
+  }));
+
+  // useEffect(() => {
+  //   // 在组件加载时，自动播放 initialIndex 对应的视频
+  //   return () => {
+  //     if (initialIndex !== -1 && playersRef.current[initialIndex]) {
+  //       playersRef.current[initialIndex]?.play();
+  //     }
+  //   };
+  // }, []);
+
+  // useEffect(() => {
+  //   // 组件卸载时，暂停所有视频
+  //   return () => {
+  //     playersRef.current.forEach((player) => {
+  //       player?.pause();
+  //     });
+  //   };
+  // }, []);
+  
+  useEffect(() => {
+    // 当组件在加载时，缓冲500ms后播放视频
+    const timer = setTimeout(() => {
+      if (initialIndex !== -1 && playersRef.current[initialIndex]) {
+        playersRef.current[initialIndex]?.play();
+      }
+    }, 500);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [initialIndex]);
+
+
+  const handleScrollEnd = (event: { nativeEvent: { contentOffset: { x: number } } }) => {
+    const newIndex = Math.round(event.nativeEvent.contentOffset.x / SCREEN_WIDTH);
+    if (newIndex === currentIndex) return;
+
+    // 暂停上一个视频
+    playersRef.current[currentIndex]?.pause();
+    // 播放新视频
+    playersRef.current[newIndex]?.play();
+
+    setCurrentIndex(newIndex);
+  };
+
+  return (
+    <Animated.View style={styles.container}>
+      <FlatList
+        ref={flatListRef}
+        data={mediaUris}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        // initialScrollIndex={initialIndex === -1 ? 0 : initialIndex}
+        onMomentumScrollEnd={handleScrollEnd}
+        onScroll={(event) => {
+          translateX.value = -event.nativeEvent.contentOffset.x;
+        }}
+        renderItem={({ item, index }) => (
+          <View style={styles.itemContainer}>
+            <MediaPlayer
+              ref={(ref) => {
+                playersRef.current[index] = ref;
+              }}
+              uri={item}
+              autoPlay={index === initialIndex}
+              onPlaybackStatusUpdate={(status) => {
+                // 状态更新逻辑...TODO
+                // 例如：如果视频播放完毕，自动切换到下一个视频
+              }}
+            />
+          </View>
+        )}
+        keyExtractor={(item, index) => index.toString()}
+        getItemLayout={(_, index) => ({
+          length: SCREEN_WIDTH,
+          offset: SCREEN_WIDTH * index,
+          index
+        })} 
+        onLayout={() => {
+          // 在 FlatList 布局完成后，滚动到 initialIndex 并播放对应视频
+          if (initialIndex !== -1) {
+            flatListRef.current?.scrollToIndex({ index: initialIndex, animated: false });
+            setTimeout(() => {
+              playersRef.current[initialIndex]?.play(); // 确保播放目标索引的视频
+            }, 100); // 延迟以确保滚动完成
+          }
+        }}
+      />
+    </Animated.View>
+  );
+};
+
+const MediaPlayerList = forwardRef(MediaPlayerListComponent);
+export default MediaPlayerList;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    height: 500
+  },
+  itemContainer: {
+    width: SCREEN_WIDTH,
+    height: '100%'
+  }
+});

@@ -9,7 +9,7 @@ import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 const FollowPage = () => {
 
     const {freshPostCnt} = useGlobalContext()
-    const pageSize = 6
+    const pageSize = 50
     const [posts, setPosts] = useState<any[]>([])
     const [pageNumber, setPageNumber] = useState(0)
     const [loading, setLoading] = useState(false)

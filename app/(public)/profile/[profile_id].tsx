@@ -22,7 +22,7 @@ const ProfilePage = ({ profile_id: propProfileId }: ProfilePageProps) => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const pageSize = 6;
+  const pageSize = 50;
 
   // 判断是否查看自己
   const isCurrentUser = profile_id === currentUser?.userId;

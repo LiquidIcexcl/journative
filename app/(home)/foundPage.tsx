@@ -10,7 +10,7 @@ const FoundPage = () => {
 
     const {freshPostCnt} = useGlobalContext()
 
-    const pageSize = 6
+    const pageSize = 50
     const [posts, setPosts] = useState<any[]>([])
     const [pageNumber, setPageNumber] = useState(0)
     const [loading, setLoading] = useState(false)
@@ -44,6 +44,8 @@ const FoundPage = () => {
         // 排除所有字段via_state!=1的帖子
         newPosts = newPosts.filter((post: any) => post?.del_flag === 0) 
         newPosts = newPosts.filter((post: any) => post?.via_state === 1) 
+        console.log(newPosts);
+        
         if (isRefresh) {
           setPosts(newPosts)
         } else {

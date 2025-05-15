@@ -16,7 +16,7 @@ const SearchPage = () => {
   const [hasMore, setHasMore] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [pageNumber, setPageNumber] = useState(0);
-  const pageSize = 6;
+  const pageSize = 50;
 
   // 核心修改：参数匹配的搜索方法
   const fetchPosts = async (isRefresh = false) => {
@@ -32,11 +32,13 @@ const SearchPage = () => {
     }
 
     try {
-      const newPosts = await searchPosts(
+      let newPosts = await searchPosts(
         debouncedQuery,  // 搜索关键词
         currentPage,     // 当前页码
         pageSize         // 每页数量
       );
+      newPosts = newPosts.filter((post: any) => post?.del_flag === 0); // 过滤已删除的帖子
+      newPosts = newPosts.filter((post: any) => post?.via_state === 1); // 过滤未审核的帖子
 
       if (isRefresh) {
         setResults(newPosts);

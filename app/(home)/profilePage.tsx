@@ -15,7 +15,7 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const pageSize = 6;
+  const pageSize = 50;
 
   const fetchPosts = async (isRefresh = false) => {
     if (!user?.userId || loading) return;

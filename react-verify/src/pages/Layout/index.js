@@ -1,11 +1,11 @@
 //import "@ant-design/v5-patch-for-react-19";
-import { Layout, Menu, Popconfirm } from "antd";
+import { clearUserInfo, fetchUserInfo } from "@/store/modules/user";
 import { DiffOutlined, LogoutOutlined } from "@ant-design/icons";
-import "./index.scss";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Layout, Popconfirm } from "antd";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserInfo, clearUserInfo } from "@/store/modules/user";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import "./index.scss";
 
 const { Header, Sider } = Layout;
 
@@ -17,7 +17,7 @@ const items = [
   },
 ];
 
-const GeekLayout = () => {
+const MyLayout = () => {
   const navigate = useNavigate();
   const userInfo = useSelector((state) => state.user.userInfo);
   const onMenuClick = (route) => {
@@ -48,8 +48,11 @@ const GeekLayout = () => {
   //const name = useSelector((state) => state.user.userInfo.name);
   return (
     <Layout>
-      <Header className="header">
+      <Header className="header" style={{ background: "#FFFFFF" }}>
         {/* <div className="logo" /> */}
+        <div className="title">
+          <h2 className="title-text">审核管理系统</h2>
+        </div>
         <div className="user-info">
           <span className="user-name">
             {userInfo?.super_name} (
@@ -68,7 +71,7 @@ const GeekLayout = () => {
         </div>
       </Header>
       <Layout>
-        <Sider width={200} className="site-layout-background">
+        {/* <Sider width={200} className="site-layout-background">
           <Menu
             mode="inline"
             theme="dark"
@@ -77,7 +80,7 @@ const GeekLayout = () => {
             items={items}
             style={{ height: "100%", borderRight: 0 }}
           ></Menu>
-        </Sider>
+        </Sider> */}
         <Layout className="layout-content" style={{ padding: 20 }}>
           {/* 二级路由的出口 */}
           <Outlet />
@@ -86,4 +89,4 @@ const GeekLayout = () => {
     </Layout>
   );
 };
-export default GeekLayout;
+export default MyLayout;

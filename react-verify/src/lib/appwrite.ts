@@ -1,12 +1,21 @@
 import { Client, Account, Avatars, Databases, Storage, Query } from "appwrite";
-const databaseId = "6824544b001f6e39416f";
-const projectId = "6824513a000a9628379d";
+// const databaseId = "6824544b001f6e39416f";
+// const projectId = "6824513a000a9628379d";
+// const bucketId = "6816cdce000e3f0bd051";
+// const collectionIdUser = "6816bf9d000fc4bfb34b";
+// const collectionIdFollow = "6816c7c2000b6360b84d";
+// const collectionIdPost = "682455b3003606cb4b12";
+// const collectionIdComment = "6816c7c80037305d9a4c";
+// const collectionIdSuper = "6824548a000d5462c639";
+
+const databaseId = "6816bee7001e6018e128";
+const projectId = "6816be9b001517c67a5c";
 const bucketId = "6816cdce000e3f0bd051";
 const collectionIdUser = "6816bf9d000fc4bfb34b";
-const collectionIdFollow = "6816c7c2000b6360b84d";
-const collectionIdPost = "682455b3003606cb4b12";
+const collectionIdFollow="6816c7c2000b6360b84d";
+const collectionIdPost = "6816c7ce0026b1143612";
 const collectionIdComment = "6816c7c80037305d9a4c";
-const collectionIdSuper = "6824548a000d5462c639";
+const collectionIdSuper = "682211850003cfe8b037";
 
 let client: Client;
 
@@ -81,6 +90,39 @@ export async function getAllPostsAPI() {
     console.error("Error fetching all posts:", error);
     throw error;
   }
+}
+
+// 获取帖子详情
+// 获取帖子详情（支持视频和图片数组）
+// 获取帖子详情（根据新的hasVideo逻辑）
+export async function getPostDetailAPI(postId: string) {
+  try {
+    const response = await database.getDocument(
+      databaseId,
+      collectionIdPost,
+      postId
+    );
+    
+    // 处理视频逻辑
+    let videoUrl = null;
+    if (response.hasVideo !== -1 && response.images_url) {
+      videoUrl = response.images_url[response.hasVideo]; // 通过下标获取视频URL
+    }
+
+    return {
+      ...response,
+      images: response.images_url || [],
+      videoUrl
+    };
+  } catch (error) {
+    console.error("获取帖子详情失败:", error);
+    throw error;
+  }
+}
+
+// 获取文件预览URL
+export function getFilePreview(fileId: string) {
+  return storage.getFilePreview(bucketId, fileId);
 }
 
 // appwrite.ts 新增接口

@@ -11,12 +11,24 @@
   overflow-y: auto;
 }
 
+.title {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 0;
+  padding-left: 20px;
+  color: #000000;
+  .title-text {
+    margin: 0;
+  }
+}
+
 .user-info {
   position: absolute;
   right: 0;
   top: 0;
   padding-right: 20px;
-  color: #fff;
+  color: #000;
 
   .user-name {
     margin-right: 20px;

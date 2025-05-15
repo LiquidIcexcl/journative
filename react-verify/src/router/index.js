@@ -4,6 +4,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { AuthRoute } from "@/components/AuthRoute";
 //import Home from "@/pages/Home";
 import Article from "@/pages/Article";
+import ArticleDetail from "@/pages/ArticleDetail";
 import { Navigate } from "react-router-dom";
 //import Publish from "@/pages/Publish";
 
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
         path: "article",
         element: <Article />,
       },
+      { path: "article/detail/:postId", element: <ArticleDetail /> },
     ],
   },
   {

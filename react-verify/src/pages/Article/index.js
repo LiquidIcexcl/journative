@@ -1,27 +1,27 @@
-import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 //import "@ant-design/v5-patch-for-react-19";
 import {
-  getPostsAPI,
-  deletePostAPI,
-  rejectPostAPI,
   approvePostAPI,
+  deletePostAPI,
+  getPostsAPI,
+  rejectPostAPI,
 } from "@/lib/appwrite.ts";
 import {
-  Card,
   Breadcrumb,
-  Form,
   Button,
-  Radio,
+  Card,
+  Dropdown,
+  Form,
   //Select,
   Popconfirm,
-  Dropdown,
+  Radio,
 } from "antd";
 // 引入汉化包 时间选择器显示中文
 //import locale from "antd/es/date-picker/locale/zh_CN";
 
 // 导入资源
-import { Table, Tag, Space } from "antd";
+import { Space, Table, Tag } from "antd";
 
 import img404 from "@/assets/error.png";
 
@@ -38,8 +38,8 @@ const Article = () => {
 
   const statusMap = {
     0: { text: "待审核", color: "warning" },
-    1: { text: "审核通过", color: "success" },
-    2: { text: "审核未通过", color: "error" },
+    1: { text: "已通过", color: "success" },
+    2: { text: "未通过", color: "error" },
   };
 
   // };
@@ -69,6 +69,9 @@ const Article = () => {
       title: "操作",
       render: (data) => (
         <Space>
+          <Link to={`/article/detail/${data.$id}`}>
+            <Button type="link">查看详情</Button>
+          </Link>
           <Dropdown
             menu={{
               items: [
@@ -76,10 +79,12 @@ const Article = () => {
                   key: "approve",
                   label: (
                     <Popconfirm
-                      title="确认通过审核？"
+                      title="确认通过？"
+                      okText="确认"
+                      cancelText="取消"
                       onConfirm={() => handleApprove(data.$id)}
                     >
-                      <span>通过审核</span>
+                      <span>通过</span>
                     </Popconfirm>
                   ),
                 },
@@ -87,10 +92,12 @@ const Article = () => {
                   key: "reject",
                   label: (
                     <Popconfirm
-                      title="确认拒绝审核？"
+                      title="确认拒绝？"
+                      okText="确认"
+                      cancelText="取消"
                       onConfirm={() => handleReject(data.$id)}
                     >
-                      <span>拒绝审核</span>
+                      <span>拒绝</span>
                     </Popconfirm>
                   ),
                 },
@@ -102,7 +109,9 @@ const Article = () => {
 
           {userInfo?.super_type === 1 && (
             <Popconfirm
-              title="确认逻辑删除？"
+              title="确认删除？"
+              okText="确认"
+              cancelText="取消"
               onConfirm={() => handleDelete(data.$id)}
             >
               <Button danger type="link">
@@ -131,7 +140,6 @@ const Article = () => {
     getList();
   }, [reqData]);
 
-  // 新增处理函数
   const handleApprove = async (postId) => {
     await approvePostAPI(postId);
     setReqData((prev) => ({ ...prev }));
@@ -170,9 +178,9 @@ const Article = () => {
     <div>
       <Card
         title={
-          <Breadcrumb
+          <Breadcrumb 
             items={[
-              { title: <Link to={"/"}>首页</Link> },
+              // { title: <Link to={"/"}>首页</Link> },
               { title: "帖子列表" },
             ]}
           />
@@ -181,22 +189,22 @@ const Article = () => {
       >
         <Form onFinish={onFinish} initialValues={{ status: 0 }}>
           <Form.Item label="审核状态" name="status">
-            <Radio.Group>
+            <Radio.Group onChange={(e) => setReqData({ ...reqData, status: e.target.value })}>
               <Radio value={0}>待审核</Radio>
-              <Radio value={1}>审核通过</Radio>
-              <Radio value={2}>审核未通过</Radio>
+              <Radio value={1}>已通过</Radio>
+              <Radio value={2}>未通过</Radio>
             </Radio.Group>
           </Form.Item>
 
-          <Form.Item>
+          {/* <Form.Item>
             <Button type="primary" htmlType="submit" style={{ marginLeft: 40 }}>
               筛选
             </Button>
-          </Form.Item>
+          </Form.Item> */}
         </Form>
       </Card>
       {/* 表格区域 */}
-      <Card title={`根据筛选条件共查询到 ${count} 条结果：`}>
+      <Card title={`共查询到 ${count} 条结果：`}>
         <Table
           rowKey="id"
           columns={columns}
